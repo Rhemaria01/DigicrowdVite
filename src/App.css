@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+* {
+  margin: 0 0 0 0;
+  padding: 0 0 0 0;
+  font-family: 'Open Sans';
+  font-style: normal;
+}
+
+body{
+  background-color: #155263;
+}
+html{
+  scroll-behavior: smooth;
+}
+.Link{
+  text-decoration: none;
+  color: inherit;
+}
+.title{
+  font-weight: 600;
+  font-size: 3.25vw;
+  line-height: 4.65vw;
+  color: #FFC93C;
+}
+.message{
+  font-weight: 500;
+  font-size: 2vw;
+  line-height: 2.5vw;
+  color: #FFFFFF;
+}
+button{
+  border: none;
+  cursor: pointer;
+}
