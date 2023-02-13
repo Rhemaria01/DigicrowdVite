@@ -10,7 +10,6 @@ const activeChainId = ChainId.Goerli;
 const container = document.getElementById("root");
 const root = createRoot(container);
 root.render(
-
     <ThirdwebProvider desiredChainId={activeChainId}>
       <App />
     </ThirdwebProvider>

@@ -1,5 +1,5 @@
 import React,{useState, useContext} from 'react'
-import { UserContext } from '../context/UserContext';
+
 import { ModalContext } from '../context/ModalContext';
 import { useNavigate } from 'react-router';
 import { ethers } from 'ethers';
@@ -7,12 +7,12 @@ import { useStateContext } from '../context';
 import Logo from '../assets/logo.png'
 import Back from '../components/Back';
 import MetamaskLogo from '../components/MetamaskLogo';
-import {AiOutlineLoading3Quarters} from 'react-icons/ai'
+import Loader from '../components/Loader';
 import Modal from '../components/Modal'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 const CreateCampaign = () => {
-    const context = useContext(UserContext);
+
     const OpenModalContext = useContext(ModalContext);
     const [loading, setLoading] = useState(false);
     const { createCampaign, uploadImage, connect, address, balance, disconnect } = useStateContext();
@@ -238,7 +238,7 @@ const CreateCampaign = () => {
 
             </span>
             </div>
-            {loading? <AiOutlineLoading3Quarters className='animate-spin h-10 w-10 col-span-2   place-self-center  text-white'/>:
+            {loading? <Loader /> : 
               <button  onClick={e=>submitCampaign(e)} className={` bg-link text-zinc-50 col-span-2   place-self-center rounded-lg text-xl py-3 h-12 w-1/2 `}>Create</button>}
     </div>
     </div>

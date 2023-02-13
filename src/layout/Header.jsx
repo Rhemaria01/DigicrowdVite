@@ -1,5 +1,4 @@
 import React,{useContext,useState} from 'react'
-import { UserContext } from '../context/UserContext';
 import { ModalContext } from '../context/ModalContext';
 import { useStateContext } from '../context';
 import {useNavigate, Link} from 'react-router-dom';
@@ -14,11 +13,12 @@ const Header = () => {
   const OpenModalContext = useContext(ModalContext);
   const { connect, address, disconnect, balance } = useStateContext();
   // console.log(address);
+  
+  const navigate = useNavigate();
   const handleLogout = () => {
     disconnect();
+    navigate('/');
   }
-
-  const navigate = useNavigate();
   
   const handleCreate = (e) => {
     e.preventDefault();
@@ -40,9 +40,9 @@ const Header = () => {
 
 
             <ul className={`md:flex   md:items-center md:pb-0 pb-12 absolute md:static  md:z-auto z-[-1] left-0 w-full md:w-auto md:pl-0 pl-9 `}>
-            <a className='Link ' href='#explore'><p href='#' className='text-link text-2xl cursor-pointer ml-22 mr-6'>Explore</p></a>
-            <a  className='Link ' href="#how-it-works"><p className='text-link text-2xl cursor-pointer mx-6'>How it Works?</p></a>
-            <a   className='Link ' href="#about-us"> <p className='text-link text-2xl cursor-pointer mx-6'>About us</p></a>
+            <a className='Link ' href='/#explore'><p href='#' className='text-link text-2xl cursor-pointer ml-22 mr-6'>Explore</p></a>
+            <a  className='Link ' href="/#how-it-works"><p className='text-link text-2xl cursor-pointer mx-6'>How it Works?</p></a>
+            <a   className='Link ' href="/#about-us"> <p className='text-link text-2xl cursor-pointer mx-6'>About us</p></a>
             </ul>
 
             {address  ?
@@ -68,7 +68,7 @@ const Header = () => {
         <input type="text" className="w-[80%] rounded-full h-12 pl-20 outline-none text-[#777777]" placeholder="Search Project" />
         {
           address ?
-        <button onClick={() => navigate("/")} className='text-zinc-50 ml-10 bg-link font-sans text-lg font-extrabold px-4 py-2 rounded-full'><span className='flex flex-row gap-5  items-center'>View Your Campaigns</span></button>
+        <button onClick={() => navigate("/campaigns")} className='text-zinc-50 ml-10 bg-link font-sans text-lg font-extrabold px-4 py-2 rounded-full'><span className='flex flex-row gap-5  items-center'>View Your Campaigns</span></button>
           
           :<button onClick={e => handleCreate(e)} className='text-zinc-50 ml-10 bg-link font-sans text-lg font-extrabold px-4 py-2 rounded-full'><span className='flex flex-row gap-5  items-center'><FaPlus className='h-5'/>Create Campaign</span></button>
         }
