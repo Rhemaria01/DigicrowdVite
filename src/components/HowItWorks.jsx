@@ -4,26 +4,24 @@ import HowItWorksImg from "../assets/howItWorks.svg"
 const HowItWorks = () => {
   return (
     <>
-<div className='container' id="how-it-works">
-        <h1 className='text-link text-center mt-28 md:text-6xl sm:text-4xl   mb-20' data-aos="fade-up">How it Works?</h1>
-        <div className='flex flex-row w-full'>
+<div className='bg-neutral-700' id="how-it-works">
+        <div className='flex container mx-auto flex-row space-x-10  items-center h-[28rem]'>
 
-          <img src={HowItWorksImg} alt="How It Works?" data-aos="fade-right" className='sm:h-48 md:h-[35rem]' />
-          <div className='flex flex-col justify-center' data-aos="fade-left">
-        <h1 className='text-link text-start md:text-5xl sm:text-3xl  mb-3' >What is Crowdfunding?</h1>
-                <p className='text-slate-50 font-extrabold text-3xl mb-10 w-[90%]' >
-                Crowdfunding is the practice of funding a project or 
-                venture by raising money from a large number of 
-                people, typically via the internet. 
+          <img src={HowItWorksImg} alt="How It Works?" data-aos="fade-right" className='sm:h-48 md:h-64 w-[25.5rem]' />
+          <div className='flex flex-col gap-y-0 ' data-aos="fade-left">
+
+                <p className='text-slate-50  font-roboto  text-right font-extrabold text-[64px]  ' >
+                Empowering the Crowd with </p>
+                <p className='text-link font-roboto text-right fontExtrabold text-[64px] '> 
+                Secure and Transparent Funding
                 </p>
-        <h1 className='text-link text-start md:text-5xl sm:text-3xl  mb-3'>Why choose Digicrowd?</h1>
-                <p className='text-slate-50 font-extrabold text-3xl mb-10 w-[90%]'>
-                Find out more about our team and our story. We’ve 
-                helped over 175,000 projects raise more than 
-                $100 million for great causes. 
-                </p>
+                <p className='text-slate-50 font-roboto text-right fontExtrabold text-[64px]  ' >
+                through Blockchain. </p>
+                
+                
+
           </div>
-        </div>
+          </div>
           </div>
 
     </>

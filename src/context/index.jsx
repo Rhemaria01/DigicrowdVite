@@ -12,11 +12,10 @@ import { ethers } from "ethers";
 const StateContext = createContext();
 
 export const StateProvider = ({ children }) => {
-    const { contract } = useContract("0xe0C569c7b48ffF6e2a0ee8C76895cf031836bAE7");
+    
+    const {  contract, status } = useContract("0x5fafc7ee3924debefA92eD5388a04fd91074032F");
     const { mutateAsync: createCampaign } = useContractWrite(contract, "createCampaign")
-    const { data: campaigns,  isLoading: isCampaignsLoading } = useContractRead(contract, "getCampaigns")
 
-    // isCampaignsLoading ? console.log('loading') : console.log('campaigns', campaigns);
     
     
     
@@ -83,18 +82,21 @@ export const StateProvider = ({ children }) => {
         }
     }
 
-    const receiveFunds = async (id) => {
+    const receiveFunds = async (id,amount) => {
         try {
-            const data = await contract.call("receiveFunds", id)
+            const data = await contract.call("donateToCampaign", id, {value: ethers.utils.parseEther(amount)} )
             console.log('data', data);
         return  data
         } catch (error) {
-            console.log('error', error);
+            if(!address) connect();
+            receiveFunds(id,amount);
         }
     }
+
+
     return (
         <StateContext.Provider 
-        value={{address,  createCampaign: publishCampaign, connect, disconnect, balance, uploadImage, getCampaigns, getCampaign, receiveFunds}}>
+        value={{address,status,  createCampaign: publishCampaign, connect, disconnect, balance, uploadImage, getCampaigns, getCampaign, receiveFunds}}>
             {children}
         </StateContext.Provider>
     )

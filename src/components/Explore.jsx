@@ -15,7 +15,7 @@ import ExploreCard from "./ExploreCard";
 const Explore = () => {
   const [campaigns, setCampaigns] = useState([]);
   const [isCampaignsLoading, setIsCampaignsLoading] = useState(false);
-  const { address, contract, getCampaigns } = useStateContext();
+  const { address, contract, getCampaigns, status } = useStateContext();
 
   const fetchCampaigns = async () => {
 
@@ -27,12 +27,15 @@ const Explore = () => {
 
   useEffect(() => {
 
-   if(contract) fetchCampaigns();
-  }, [address, contract])
+    if(status === "loading") setIsCampaignsLoading(true);
+    if(status === "success") {setIsCampaignsLoading(false) ; fetchCampaigns()}
+    
+
+  }, [address, contract, status])
 
   return (
-      <div className='container ' data-aos="fade-up" id="explore">
-        <h1 className='text-link  md:text-6xl sm:text-4xl text-center mb-20'>Featured Project</h1>
+      <div className='container mx-auto mt-20' data-aos="fade-up" id="explore">
+        <h1 className='text-white font-roboto font-extrabold  md:text-6xl sm:text-4xl text-left mb-20'>Our Recent <em className='text-link extrabold font-roboto'>Campaigns</em></h1>
         {
         isCampaignsLoading ? <div className='flex justify-center h-[30rem]'><Loader /></div> :
         <Swiper

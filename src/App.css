@@ -9,7 +9,7 @@
 }
 
 body{
-  background-color: #155263;
+  background-color: #1E1E1E;
 }
 html{
   scroll-behavior: smooth;
@@ -33,4 +33,7 @@ html{
 button{
   border: none;
   cursor: pointer;
+}
+.fontExtrabold {
+  font-weight: 800;
 }

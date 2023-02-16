@@ -1,0 +1,9 @@
+.smoke{
+    animation: animateSmoke 1s linear alternate-reverse infinite;
+}
+@keyframes animateSmoke {
+    to {
+      opacity: 1;
+      transform: scale(.98) translateY(-10px);
+    }
+  }

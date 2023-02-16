@@ -9,10 +9,11 @@ module.exports = {
       colors: {
         'primary': '#0F4C81',
         'secondary': '#F9F9F9',
-        'link': '#FFC93C',
+        'link': '#54B435',
       },
       fontFamily: {
         'sans': ['Open Sans', 'sans-serif'],
+        'roboto': ['Roboto'],
     },
   },
   },

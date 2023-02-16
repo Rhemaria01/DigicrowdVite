@@ -4,7 +4,7 @@ import { ModalContext } from '../context/ModalContext';
 import { useNavigate } from 'react-router';
 import { ethers } from 'ethers';
 import { useStateContext } from '../context';
-import Logo from '../assets/logo.png'
+import Logo from '../assets/logo.svg'
 import Back from '../components/Back';
 import MetamaskLogo from '../components/MetamaskLogo';
 import Loader from '../components/Loader';
@@ -160,26 +160,12 @@ const CreateCampaign = () => {
   
   return (
     <>
-    <div className= {`container flex flex-col  items-center justify-center font-sans ${OpenModalContext.modalOpen && "blur-md"}`}>
+    <div className= {`container mx-auto flex flex-col  items-center justify-center font-sans ${OpenModalContext.modalOpen && "blur-md"}`}>
     <Back />
     <div className="absolute top-[40%] right-[45%]">
     <MetamaskLogo width={150} height={150}/>
     </div>
-    <div className='flex flex-row items-center justify-center '>
-    <img src={Logo} alt="logo" data-aos="fade-down" onClick={() => navigate} className='h-36' />
-    {address   ?
-            <div className='flex flex-row items-center'>
-            <span className='flex flex-row items-center gap-x-4'>
-            {/* <MetamaskLogo width={45} height={45}/> */}
-            <p className='text-zinc-50 text-2xl font-bold'>{balance.data && balance.data?.displayValue.slice(0,5) + " " + balance.data?.symbol} </p>
-            </span>
-            <button className='text-zinc-50 ml-10 bg-link font-sans text-lg font-extrabold px-7 py-2 rounded-full' onClick={handleLogout}>Log Out</button>
-            </div>
-             :
-             <button onClick={() => connect()}  className='outline outline-zinc-50 text-xl   cursor-pointer px-7 py-1 ml-4 text-zinc-50 rounded-full'  >
-            <span className='flex flex-row items-center'><p className='mr-5'> Login With Metamask </p><MetamaskLogo height={45} width={45}/></span></button>
-            }
-    </div>
+
     <div data-aos="fade-right" className='flex flex-row mt-10 justify-start'>
     <span className='text-link text-4xl'>Welcome</span>
     </div>

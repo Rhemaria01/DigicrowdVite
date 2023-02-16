@@ -2,7 +2,6 @@ import React,{useState,useEffect} from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 import { ModalContext } from './context/ModalContext';
-import { StateProvider } from './context';
 import LandingPage from './pages/LandingPage';
 import Footer from './layout/Footer';
 import CreateCampaign from './pages/CreateCampaign';
@@ -15,7 +14,6 @@ import 'aos/dist/aos.css';
 import Header from './layout/Header';
 
 export default function Home() {
-  const [user, setUser] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [message, setMessage] = useState('');
   useEffect(() => {
@@ -24,10 +22,10 @@ export default function Home() {
     });
   }, []);
   return (
-    <StateProvider >
     <ModalContext.Provider value={{modalOpen, message, setModalOpen,  setMessage}}>
     <Router>
-    <div className='container mx-auto  h-auto'>
+    <Header />  
+    <div className='  h-auto'>
       <Routes>
         <Route path="/" exact element={<LandingPage />} />
         <Route path="/create" exact element={<CreateCampaign/>} />
@@ -35,17 +33,16 @@ export default function Home() {
         <Route path="/donate/:id" element={<Donate/>} />
         <Route path="*" element={
           <>
-          <Header />
+          
         <div className='h-screen container mx-auto flex justify-center items-center'><h1 className='text-9xl text-link'>Error Page Not Found</h1></div>
 
           </>
         } />
       </Routes>
     </div>
-      <Footer />
+      {/* <Footer /> */}
       
     </Router>
       </ModalContext.Provider>
-      </StateProvider>
   );
 }
