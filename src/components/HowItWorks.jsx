@@ -4,7 +4,7 @@ import HowItWorksImg from "../assets/howItWorks.svg"
 const HowItWorks = () => {
   return (
     <>
-<div className='bg-neutral-700' id="how-it-works">
+<div className='bg-neutral-700' >
         <div className='flex container mx-auto flex-row space-x-10  items-center h-[28rem]'>
 
           <img src={HowItWorksImg} alt="How It Works?" data-aos="fade-right" className='sm:h-48 md:h-64 w-[25.5rem]' />

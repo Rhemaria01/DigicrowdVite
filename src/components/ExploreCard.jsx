@@ -6,9 +6,9 @@ const ExploreCard = ({campaign, index}) => {
     const collected = hexToEth(campaign.amountCollected?._hex);
     const target = hexToEth(campaign.target?._hex);
   return (
-    <Link to={`/donate/${index}`} className='flex justify-center cursor-pointer items-center ml-14 flex-col min-h-48 w-56 bg-slate-200 shadow-md shadow-slate-200/20 rounded-2xl'>
-    <div  className='flex justify-center cursor-pointer items-center ml-14 flex-col min-h-48 w-80 bg-slate-200 shadow-md shadow-slate-200/20 rounded-2xl'>
-               <img src={campaign.image} alt='exploreCard' className='w-72 h-56 object-cover mt-2'/> 
+    <Link to={`/donate/${index}`} >
+    <div data-aos="zoom-in" className='flex justify-center cursor-pointer items-center ml-14 flex-col min-h-48 w-80 bg-slate-200 shadow-md shadow-slate-200/20 rounded-2xl'>
+               <img src={campaign.image} alt='exploreCard' className='w-72 h-40  object-cover mt-5'/> 
 
             <div className='w-72 mt-4'>
                 <h3 className="text-slate-900 font-bold text-lg font-roboto">{campaign.title}</h3>

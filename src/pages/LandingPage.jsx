@@ -6,7 +6,7 @@ import heroImage from '../assets/heroImage.svg';
 import HowItWorks from '../components/HowItWorks';
 import AboutUs from '../components/AboutUs';
 import Explore from '../components/Explore';
-
+import Steps from '../components/Steps';
 import rocket from '../assets/rocket/Vector.png';
 import rocket1 from '../assets/rocket/Vector-1.png';
 import rocket2 from '../assets/rocket/Vector-2.png';
@@ -16,6 +16,7 @@ import rocket5 from '../assets/rocket/Vector-5.png';
 import { TypeAnimation } from 'react-type-animation';
 import Modal from '../components/Modal'
 import "../styles/Rocket.css" 
+import Stats from '../components/Stats';
 const LandingPage = () => {
   const OpenModalContext = useContext(ModalContext);
 
@@ -50,7 +51,7 @@ const LandingPage = () => {
           <div className='h-[29.813rem] w-[40rem]'>
             
             <div className='absolute'>
-          <img src={heroImage} alt='heroImage' className='h-[29.813rem] w-[40rem]'/>
+          <img src={heroImage} alt='heroImage' className='h-[29.813rem] w-[40rem]' data-aos="fade-left"/>
 
 
               <img src={rocket} alt='rocket'  className='smoke absolute left-[42.99%] right-[54%] top-[46.99%] bottom-[41.28%]'/>
@@ -68,7 +69,8 @@ const LandingPage = () => {
         </div>
     <HowItWorks />
     <Explore />
-
+    <Steps />
+    <Stats />
     <AboutUs />
     </div>
     {OpenModalContext.modalOpen && <Modal/>}

@@ -34,8 +34,8 @@ const Explore = () => {
   }, [address, contract, status])
 
   return (
-      <div className='container mx-auto mt-20' data-aos="fade-up" id="explore">
-        <h1 className='text-white font-roboto font-extrabold  md:text-6xl sm:text-4xl text-left mb-20'>Our Recent <em className='text-link extrabold font-roboto'>Campaigns</em></h1>
+      <div className='container mx-auto mt-20'  id="explore">
+        <h1 className='text-white font-roboto font-extrabold  md:text-6xl sm:text-4xl text-left mb-20' data-aos="fade-up">Our Recent <em className='text-link extrabold font-roboto'>Campaigns</em></h1>
         {
         isCampaignsLoading ? <div className='flex justify-center h-[30rem]'><Loader /></div> :
         <Swiper

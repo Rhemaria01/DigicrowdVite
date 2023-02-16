@@ -33,7 +33,7 @@ const Header = () => {
   return (
     <>
 
-    <div className="flex justify-between mt-5 container mx-auto items-center w-full  font-bold flex-row" data-aos="fade-down">
+    <div className="flex justify-between mt-5 container mx-auto items-center w-full  font-bold flex-row" >
             <Link to="/" className='Link' exact="true" ><img src={Logo} className="h-11 inline" alt='logo' /></Link>
 
 
