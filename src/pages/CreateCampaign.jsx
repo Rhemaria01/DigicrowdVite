@@ -160,7 +160,7 @@ const CreateCampaign = () => {
   
   return (
     <>
-    <div className= {`container mx-auto flex flex-col  items-center justify-center font-sans ${OpenModalContext.modalOpen && "blur-md"}`}>
+    <div className= {`container mx-auto flex flex-col h-screen  items-center justify-center font-sans ${OpenModalContext.modalOpen && "blur-md"}`}>
     <Back />
     <div className="absolute top-[40%] right-[45%]">
     <MetamaskLogo width={150} height={150}/>
