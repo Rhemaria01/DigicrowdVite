@@ -7,3 +7,30 @@
       transform: scale(.98) translateY(-10px);
     }
   }
+.arrow{
+    animation: animateArrow 1s linear alternate-reverse infinite;
+}
+@keyframes animateArrow {
+    to {
+      opacity: 1;
+      transform: scale(.98) translateX(20px) translateY(-20px);
+    }
+  }  
+  .mic{
+    animation: animateMic 1s linear alternate-reverse infinite;
+}
+@keyframes animateMic {
+    to {
+      opacity: 1;
+      transform: scale(.98) rotate(30deg)
+    }
+  }  
+  .mic1{
+    animation: animateMic1 1s linear alternate-reverse infinite;
+  }
+  @keyframes animateMic1 {
+    to{
+      opacity: 1;
+      transform: scale(.98) rotate(30deg) translateY(22px) translateX(8px)
+    }
+  }

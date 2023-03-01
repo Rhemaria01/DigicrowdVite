@@ -1,21 +1,33 @@
-import React,{useState, useContext} from 'react'
+import React,{useState, useContext, useCallback} from 'react'
 
 import { ModalContext } from '../context/ModalContext';
 import { useNavigate } from 'react-router';
 import { ethers } from 'ethers';
 import { useStateContext } from '../context';
-import Logo from '../assets/logo.svg'
+import {useDropzone} from 'react-dropzone'
+
+import Create from "../assets/create.svg";
+import Arrow1 from "../assets/Arrow/vector.svg";
+import Arrow2 from "../assets/Arrow/vector-1.svg";
+import Arrow3 from "../assets/Arrow/vector-2.svg";
+
+import Mic1 from "../assets/Mic/vector-2.svg";
+import Mic2 from "../assets/Mic/vector-1.svg";
+import Mic3 from "../assets/Mic/vector-3.svg";
+
+
 import Back from '../components/Back';
-import MetamaskLogo from '../components/MetamaskLogo';
 import Loader from '../components/Loader';
 import Modal from '../components/Modal'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import "../styles/Rocket.css";
 const CreateCampaign = () => {
 
     const OpenModalContext = useContext(ModalContext);
     const [loading, setLoading] = useState(false);
-    const { createCampaign, uploadImage, connect, address, balance, disconnect } = useStateContext();
+    const { createCampaign, uploadImage, address,} = useStateContext();
+    
     const navigate = useNavigate();
     const [form, setForm] = useState({
       name: '',
@@ -23,48 +35,27 @@ const CreateCampaign = () => {
       description: '',
       target: '',
       deadline: addDays(new Date(),1),
-      image: '',
+      image: []
     });
-    const [fileType, setFileType] = useState('');
+
     const handleFormFieldChange = (fieldName, e) => {
 
       if(fieldName === 'deadline'){
         setForm({
           ...form,[fieldName]: e});
       }
-      else if(fieldName === 'image'){
-        setFileType('')
 
-        OpenModalContext.setMessage(<div className='flex flex-col text-center justify-center'>
-          <p className='font-sans text-2xl  '>
-          Are you sure you want to upload this file?
-        </p>
-        <p className='font-sans text-2xl '>
-          This will be shown on your campaign page.
-        </p>
-        <div className='flex flex-row gap-x-10 justify-center'>
-        <button className='bg-[#f31d1d] text-white font-sans text-2xl rounded-md px-4 py-2 mt-4 w-1/3' onClick={() => handleCancel()}>Cancel</button>
-        <button className='bg-[#01af1e] text-white font-sans text-2xl rounded-md px-4 py-2 mt-4 w-1/3' onClick={() => handleSubmit(fieldName,e)}>Yes</button>
-        </div>
-        </div>);
-        OpenModalContext.setModalOpen(true);
-
-          
-      }
       else{
         setForm({
           ...form,[fieldName]: e.target.value});
       }
     }
-    const handleCancel = () => {
-      setForm({
-        ...form,image: ''});
-      OpenModalContext.setModalOpen(false);
-    }
+
+
+
     const handleSubmit = (fieldName,e) => {
       setForm({
         ...form,[fieldName]: e.target.files[0]});
-        setFileType(e.target.files[0].type);
       OpenModalContext.setModalOpen(false);
     }
     const validateForm = async (form) => {
@@ -126,9 +117,16 @@ const CreateCampaign = () => {
         }
         const valid = await validateForm(form);
         if(valid){
+
           setLoading(true);
-        const data = await uploadImage(form.image);       
-          await createCampaign({...form,image: data[0], target: ethers.utils.parseUnits(form.target,18)._hex});
+          const files =  await Promise.all(form.image.map(async (file) => {
+            const url = await uploadImage(file.file);
+            return [url[0],file.type];
+          }));
+          console.log('files',files.flat());
+          
+          
+          await createCampaign({...form,image: files.flat(), target: ethers.utils.parseUnits(form.target,18)._hex});
           setLoading(false);
           navigate('/campaigns');
         }
@@ -153,79 +151,137 @@ const CreateCampaign = () => {
   
     return date;
   }
-  const handleLogout = () => {
-    disconnect();
-    navigate('/');
-  }
+
+
+    const onDrop = useCallback(acceptedFiles => {
+
+      // Do something with the files
+      console.log(acceptedFiles);
+      OpenModalContext.setMessage(<div className='flex flex-col text-center justify-center'>
+      <p className='font-sans text-2xl  '>
+      Are you sure you want to upload these files?
+    </p>
+    <p className='font-sans text-2xl '>
+      This will be shown on your campaign page.
+    </p>
+    <div className='flex flex-row gap-x-10 justify-center'>
+    <button className='bg-[#f31d1d] text-white font-sans text-2xl rounded-md px-4 py-2 mt-4 w-1/3' onClick={() => OpenModalContext.setModalOpen(false)}>Cancel</button>
+    <button className='bg-[#01af1e] text-white font-sans text-2xl rounded-md px-4 py-2 mt-4 w-1/3' onClick={() => handleImage(acceptedFiles)}>Yes</button>
+    </div>
+    </div>)
+    OpenModalContext.setModalOpen(true);
+    }, [])
+
+    const handleImage = (files) => {
+      const temp = [...form.image];
+      files.forEach((file) => {
+        temp.push({
+          file: file,
+          preview: URL.createObjectURL(file),
+          type: file.type,
+        });
+      })
+      setForm({
+        ...form,image: [...temp]
+      });
+      OpenModalContext.setModalOpen(false);
+    }
+  
+    const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop})
   
   return (
     <>
-    <div className= {`container mx-auto flex flex-col h-screen  items-center justify-center font-sans ${OpenModalContext.modalOpen && "blur-md"}`}>
+    <div className= {`container mx-auto flex flex-col   font-sans ${OpenModalContext.modalOpen && "blur-md"}`}>
     <Back />
-    <div className="absolute top-[40%] right-[45%]">
-    <MetamaskLogo width={150} height={150}/>
-    </div>
 
-    <div data-aos="fade-right" className='flex flex-row mt-10 justify-start'>
-    <span className='text-link text-4xl'>Welcome</span>
-    </div>
-    <div className=' mt-10 w-[75vw] mb-48  grid grid-cols-2 place-items-center gap-y-7 gap-x-10'>
-            <span data-aos="fade-right" className='w-3/4 flex flex-col gap-y-1'>
-            <label htmlFor="owner"  className='text-link text-xl'>Name</label>
-            <input type="text" placeholder="Owner" id='owner' className='h-10 pl-2 outline-none' value={form.name} onChange={(e) => handleFormFieldChange('name', e)} />
-            </span>
-            <span data-aos="fade-left" className='w-3/4 flex flex-col gap-y-1'>
-            <label htmlFor="title" className='text-link text-xl'>Title</label>
-            <input type="text" placeholder="Title" id="title" className='h-10 pl-2 outline-none' value={form.title} onChange={(e) => handleFormFieldChange('title', e)} />
-            </span>
-            <span data-aos="fade-right" className='w-3/4 flex self-start   flex-col gap-y-1'>
-            <label htmlFor="description" className='text-link text-xl'>Description</label>
-            <textarea placeholder="Description" id="description" className='h-28 pl-2 outline-none' onInput={(element) => auto_grow(element)} value={form.description} onChange={(e) => handleFormFieldChange('description', e)} />
-            </span>
-            <div className='justify-self-center self-start w-3/4 '>
-            <span  data-aos="fade-left" className='mb-10 flex flex-col gap-y-1'>
-            <label htmlFor="amount" className='text-link text-xl'>Target</label>
-            <input type="text" placeholder="Amount" id="amount" className='h-10 pl-2 outline-none' value={form.target} onChange={(e) => handleFormFieldChange('target', e)} />
-            </span>
-            
-            <span data-aos="fade-left" className='flex flex-col gap-y-1'>
-            <label htmlFor="image" className='text-link text-xl'>Upload Image/Video</label>
-            <input type="file"
-            onChange={(e) => handleFormFieldChange('image', e)}
-            accept="image/*,video/*"
-             className="block w-full text-sm text-slate-500
-      file:mr-4 file:py-2 file:px-4
-      file:rounded-full file:border-0
-      file:text-sm file:font-semibold
-      file:bg-gray-50 file:text-gray-800
-      hover:file:bg-gray-100
-      outline-none
-    "/>
-            </span>
 
-            {
-              fileType === "" ? <div></div> : 
-              fileType.includes("image") ? <img src={URL.createObjectURL(form.image)} alt="image" className='h-48 w-full mt-2'/> : 
-              fileType.includes("video") ? <video controls  src={URL.createObjectURL(form.image)} alt="video" className='h-48 mt-2'/> : <div></div>
-            }
-            <span data-aos="fade-right" className='mb-10  flex flex-col gap-y-1 mt-2'>
-            <label htmlFor="date" className='text-link text-xl'>End Date</label>
+    <div className='mt-10 min-h-[57.625rem] bg-neutral-700 rounded-3xl  grid grid-cols-5  gap-x-1 gap-y-7'>
+    <div className='bg-[#81cb07e6] w-[30.25rem] h-[54.788rem] flex flex-col  col-span-2 place-self-center rounded-3xl'>
+    <h1 className='text-[#4BA23C] absolute mt-10 ml-10 text-5xl w-1/5 font-extrabold'>Create </h1>
+    <h1 className='text-[#4BA23C] absolute mt-20 ml-10 text-5xl w-1/5 font-extrabold'>Campaign </h1>
+    <div className="absolute">
+      <img src={Create} alt="create" className='w-[30.25rem] h-[54.788rem] rounded-3xl'/>
+      <img src={Arrow1} alt="arrow" className='arrow absolute left-[80.67%] right-[17.06%] top-[37.37%] bottom-[50.13%]'/>
+      <img src={Arrow2} alt="arrow" className='arrow absolute left-[80.67%] right-[17.06%] top-[39.00%] bottom-[50.13%]'/>
+      <img src={Arrow3} alt="arrow" className='arrow absolute left-[71.67%] right-[17.06%] top-[37.86%] bottom-[50.13%]'/>
+      <img src={Mic1} alt="mic" className='mic1 absolute left-[80.67%] right-[17.06%] top-[51.87%] h-[60.91px] bottom-[50.13%]'/>
+      <img src={Mic2} alt="mic" className='mic absolute left-[65.67%] right-[17.06%] top-[52.50%] w-[75.7px] h-[60.91px] bottom-[50.13%]'/>
+      {/* <img src={Mic3} alt="mic" className='mic1 absolute left-[67.67%] right-[17.06%] top-[54.36%] h-[4.32px] w-[17.05px] bottom-[50.13%]'/> */}
+      </div>
+    </div>
+    <div className='col-span-3 flex flex-col justify-center items-start'>
+    <span className='col-span-2'>
+    <h1 className='font-roboto text-white  text-4xl'>Your <em className='text-link font-roboto'> Campaign Wizard</em></h1>
+    <p className='text-[#878787] text-xl font-normal text-left font-roboto w-4/5'>Start your journey of creating amazing campaigns with just these simple steps</p>
+    </span>
+            <span data-aos="fade-right" className='w-[48.25rem] flex flex-col mt-10 gap-y-4'>
+            <label htmlFor="owner"  className='text-white font-roboto  text-xl'>Campaign Name</label>
+            <input type="text" placeholder="My new campaign" id='owner' className='h-10 pl-2 text-[#878787] bg-[#1E1E1E] rounded-lg outline-none' value={form.name} onChange={(e) => handleFormFieldChange('name', e)} />
+            </span>
+            <div className='flex flex-row w-full justify-start gap-x-36' >
+            <span  data-aos="fade-left" className='w-64 mb-10 flex flex-col mt-5 gap-y-1'>
+            <label htmlFor="amount" className='text-white font-roboto  text-xl'>Amount</label>
+            <input type="text" placeholder="Amount" id="amount" className='h-10 pl-2 text-[#878787] bg-[#1E1E1E] rounded-lg outline-none' value={form.target} onChange={(e) => handleFormFieldChange('target', e)} />
+            </span>
+            <span data-aos="fade-right" className='w-64 mb-10 mt-5  flex flex-col gap-y-1 '>
+            <label htmlFor="date" className='text-white font-roboto  text-xl'>End Date</label>
             
             <DatePicker
       selected={form.deadline}
       showIcon
-      
+
       onChange={(e) => handleFormFieldChange('deadline', e)}
       minDate={addDays(new Date(),1)}
       maxDate={addMonths(new Date(), 6)}
       showDisabledMonthNavigation
-      className=' h-10 pl-2 outline-none'
+      className=' h-10 pl-2 outline-none text-[#878787] bg-[#1E1E1E] rounded-lg'
     />
 
             </span>
             </div>
+            <span data-aos="fade-right" className='w-[48.25rem] flex flex-col gap-y-4'>
+            <label htmlFor="description" className='text-white font-roboto  text-xl'>About your campaign</label>
+            <textarea placeholder="Give a description about your campaign" id="description" className='h-36 pl-2 text-[#878787] bg-[#1E1E1E] rounded-lg outline-none' value={form.description} onChange={(e) => handleFormFieldChange('description', e)} />
+            </span>
+
+            
+            <span data-aos="fade-left" className='flex flex-col gap-y-4 mt-5'>
+            <label htmlFor="dropzone" className='text-white font-roboto  text-xl'>Upload Image/Video </label>
+            
+    <div {...getRootProps()}>
+      <input {...getInputProps()} accept="image/*,video/*"/>
+      {
+        isDragActive ?
+        <span data-aos="fade-right" className='w-[48.25rem] flex flex-col gap-y-4'>
+            <div id="dropzone" className='h-36 flex justify-center items-center text-[#878787] bg-[#1E1E1E] rounded-lg  outline-dashed'>
+            <p className='text-[#878787] font-roboto text-xl'>Drop the files here ...</p>
+            </div>
+            </span>
+ :
+ <span data-aos="fade-right" className='w-[48.25rem] flex flex-col gap-y-4'>
+            <div id="dropzone" className='h-36 flex justify-center items-center  bg-[#1E1E1E] rounded-lg outline-none'>
+            <p className='text-[#878787] font-roboto text-xl'>Drag 'n' Drop your images or videos here, or click here</p>
+            </div>
+            </span>
+      }
+    </div>
+            </span>
+            <div className='flex flex-row gap-x-10'>
+            {
+              form.image.length > 0 && form.image.map((file, index) => {
+                return(
+                  <div key={index} className='flex flex-col gap-y-1'>
+{                  file.type.includes("image") ? <img src={file.preview} alt="image" className='h-56 w-56 object-scale-down mt-2'/> :
+                file.type.includes("video") ? <video controls  src={file.preview} alt="video" className='h-56 w-56 mt-2'/> : <div></div>}
+                  </div>
+                )
+              })
+            }
+            </div>
+
             {loading? <Loader /> : 
               <button  onClick={e=>submitCampaign(e)} className={` bg-link text-zinc-50 col-span-2   place-self-center rounded-lg text-xl py-3 h-12 w-1/2 `}>Create</button>}
+            </div>
     </div>
     </div>
     {OpenModalContext.modalOpen && <Modal/>}

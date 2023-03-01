@@ -13,7 +13,7 @@ const StateContext = createContext();
 
 export const StateProvider = ({ children }) => {
     
-    const {  contract, status } = useContract("0x5fafc7ee3924debefA92eD5388a04fd91074032F");
+    const {  contract, status } = useContract("0x06b66Fb2Ac5327cF879Aae3eAD48cc7a4f8a8D7A");
     const { mutateAsync: createCampaign } = useContractWrite(contract, "createCampaign")
 
     
@@ -30,7 +30,7 @@ export const StateProvider = ({ children }) => {
         try {
             const data = await createCampaign([
                 address,
-                form.title,
+                form.name,
                 form.description,
                 form.target,
                 new Date(form.deadline).getTime(),
@@ -46,14 +46,16 @@ export const StateProvider = ({ children }) => {
 
     const uploadImage = async (file) => {
         try {
+
             const data = await upload({
                 data: [file],
                 options: {
                     uploadWithGatewayUrl: true,
                     uploadWithoutDirectory: true,
             }
-        });
-            console.log('data', data);
+            })
+
+            // console.log('data', data);
             return data;
         } catch (error) {
             console.log('error', error);
