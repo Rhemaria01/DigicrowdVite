@@ -7,13 +7,13 @@ import { useStateContext } from '../context';
 import {useDropzone} from 'react-dropzone'
 
 import Create from "../assets/create.svg";
-import Arrow1 from "../assets/Arrow/vector.svg";
-import Arrow2 from "../assets/Arrow/vector-1.svg";
-import Arrow3 from "../assets/Arrow/vector-2.svg";
+import Arrow1 from "../assets/Arrow/Vector.svg";
+import Arrow2 from "../assets/Arrow/Vector-1.svg";
+import Arrow3 from "../assets/Arrow/Vector-2.svg";
 
-import Mic1 from "../assets/Mic/vector-2.svg";
-import Mic2 from "../assets/Mic/vector-1.svg";
-import Mic3 from "../assets/Mic/vector-3.svg";
+import Mic1 from "../assets/Mic/Vector-2.svg";
+import Mic2 from "../assets/Mic/Vector-1.svg";
+import Mic3 from "../assets/Mic/Vector-3.svg";
 
 
 import Back from '../components/Back';
@@ -59,7 +59,8 @@ const CreateCampaign = () => {
       OpenModalContext.setModalOpen(false);
     }
     const validateForm = async (form) => {
-      if(form.name === '' || form.title === '' || form.description === '' || form.target === '' || form.deadline === '' || form.image === ''){
+      console.log(form);
+      if(form.name === '' || form.description === '' || form.target === '' || form.deadline === '' || form.image === ''){
         OpenModalContext.setMessage(<div className='flex flex-col text-center justify-center'>
           <p className='font-sans text-2xl  '>
           Please fill out all the fields.

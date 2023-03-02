@@ -21,7 +21,8 @@ const Explore = () => {
 
     setIsCampaignsLoading(true);
     const res = await getCampaigns();
-    setCampaigns(res);
+    const updated = res.filter(campaign => Math.floor((campaign.deadline - new Date().getTime())/ (1000 * 3600 * 24)) >= 0)
+    setCampaigns(updated);
     setIsCampaignsLoading(false);
   }
 

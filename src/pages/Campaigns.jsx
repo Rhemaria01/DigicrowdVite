@@ -16,7 +16,7 @@ const Campaigns = () => {
     const fetchCampaigns = async () => {
     setIsCampaignsLoading(true);
     const res = await getCampaigns();
-    const userCampaigns = res.filter(campaign => campaign.owner === address);
+    const userCampaigns = res.filter(campaign => campaign.owner === address && Math.floor((campaign.deadline - new Date().getTime())/ (1000 * 3600 * 24)) >= 0);
 
     
     setCampaigns(userCampaigns);
