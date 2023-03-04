@@ -3,7 +3,11 @@ import ExploreCardImg from "../assets/exploreCard.svg";
 import { hexToEth } from '../utils/utils';
 import { Link } from 'react-router-dom';
 const ExploreCard = ({campaign, index}) => {
+
     const collected = hexToEth(campaign.amountCollected?._hex);
+    const days = Math.floor((campaign.deadline - new Date().getTime())/ (1000 * 3600 * 24));
+     
+    
     const target = hexToEth(campaign.target?._hex);
     const hasVideo = campaign.image.map((img) => img.includes('video')).includes(true);
     const videoIndex = campaign.image.map((img) => img.includes('video')).indexOf(true);
@@ -11,14 +15,15 @@ const ExploreCard = ({campaign, index}) => {
     const video = campaign.image[videoIndex-1];
     
   return (
-    <Link to={`/donate/${index}`} >
+    days >= 0 &&
+    
     <div data-aos="zoom-in" className='flex justify-center cursor-pointer items-center ml-14 flex-col min-h-48 w-80 bg-slate-200 shadow-md shadow-slate-200/20 rounded-2xl'>
-    {hasVideo? <video src={video} className='w-72 h-40  object-cover mt-5' autoPlay loop muted/>: <img src={campaign.image[0]} alt='exploreCard' className='w-72 h-40  object-cover mt-5'/> }
+    {hasVideo? <video src={video} className='w-72 h-40  object-cover mt-5' autoPlay={false} loop controls={true}/>: <img src={campaign.image[0]} alt='exploreCard' className='w-72 h-40  object-cover mt-5'/> }
                
 
             <div className='w-72 mt-4'>
                 <h3 className="text-slate-900 font-bold text-lg font-roboto">{campaign.title}</h3>
-                <p className="text-gray-500 text-sm">
+                <p className="text-gray-500 text-sm text-justify truncate">
                 {campaign.description} 
                 </p>
             </div>    
@@ -34,11 +39,11 @@ const ExploreCard = ({campaign, index}) => {
                     
                     
 
-                        <button className='bg-link text-white w-32 rounded-lg h-11'>Donate</button>
+            <Link to={`/donate/${index}`} ><button className='bg-link text-white w-32 rounded-lg h-11'>Donate</button></Link>
             </div>
 
         </div>
-    </Link>
+    
 
   )
 }

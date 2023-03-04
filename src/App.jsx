@@ -3,7 +3,6 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
 import { ModalContext } from './context/ModalContext';
 import LandingPage from './pages/LandingPage';
-import Footer from './layout/Footer';
 import CreateCampaign from './pages/CreateCampaign';
 import Campaigns from './pages/Campaigns';
 import Donate from './pages/Donate';

@@ -10,17 +10,14 @@ const AboutUs = () => {
             name: 'Reenav Hemaria',
             image: Reenav,
             role: 'Frontend Developer',
-            aos: "fade-right"
         },{
             name: 'Shubham Naik',
             image: Shubham,
             role: 'UI/UX Designer',
-            aos: "fade-up"
         },{
             name: 'Atiq Shaikh',
             image: Atiq,
             role: 'Backend Developer',
-            aos: "fade-left"
         }
     ]
 
@@ -32,7 +29,7 @@ const AboutUs = () => {
 
         <div className='flex flex-row flex-wrap justify-between gap-x-10'>
             {team.map((member, index) => (
-                <div className='flex flex-col items-center justify-center mt-10' key={index} data-aos={member.aos}>
+                <div className='flex flex-col items-center justify-center mt-10' key={index} data-aos="fade-up">
                 <img src={member.image} alt={member.name} className='h-[21.625rem] w-[21.625rem] border-4 border-link rounded-full' />
                 <p className='text-white font-roboto text-center text-4xl font-extrabold mt-10'>{member.name}</p>
                 <p className='text-[#878787] text-xl font-normal text-center font-roboto mt-2 w-3/5'>{member.role}</p>

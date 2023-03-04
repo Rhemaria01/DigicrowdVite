@@ -21,8 +21,7 @@ const Explore = () => {
 
     setIsCampaignsLoading(true);
     const res = await getCampaigns();
-    const updated = res.filter(campaign => Math.floor((campaign.deadline - new Date().getTime())/ (1000 * 3600 * 24)) >= 0)
-    setCampaigns(updated);
+    setCampaigns(res);
     setIsCampaignsLoading(false);
   }
 
@@ -39,24 +38,15 @@ const Explore = () => {
         <h1 className='text-white font-roboto font-extrabold  md:text-6xl sm:text-4xl text-left mb-20' data-aos="fade-up">Our Recent <em className='text-link extrabold font-roboto'>Campaigns</em></h1>
         {
         isCampaignsLoading ? <div className='flex justify-center h-[30rem]'><Loader /></div> :
-        <Swiper
-      modules={[Navigation, Pagination, Scrollbar, A11y, Autoplay]}
-      spaceBetween={15}
-      slidesPerView={3}
-      navigation={{ clickable: true}}
-      pagination={{ clickable: true }}
-      autoplay={{ delay: 1500, disableOnInteraction: false,waitForTransition: false }}
-      className='h-[30rem]'
-      
-      >
+        <div className='flex flex-row'>
        {campaigns.map((campaign, index) => {
           return (
-            <SwiperSlide key={index}>
+
               <ExploreCard  campaign={campaign} index={index} />
-            </SwiperSlide>
+
           )
         })}
-        </Swiper>
+      </div>
       }
         
     </div>

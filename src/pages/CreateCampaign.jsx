@@ -253,13 +253,13 @@ const CreateCampaign = () => {
       <input {...getInputProps()} accept="image/*,video/*"/>
       {
         isDragActive ?
-        <span data-aos="fade-right" className='w-[48.25rem] flex flex-col gap-y-4'>
+        <span  className='w-[48.25rem] flex flex-col gap-y-4'>
             <div id="dropzone" className='h-36 flex justify-center items-center text-[#878787] bg-[#1E1E1E] rounded-lg  outline-dashed'>
             <p className='text-[#878787] font-roboto text-xl'>Drop the files here ...</p>
             </div>
             </span>
  :
- <span data-aos="fade-right" className='w-[48.25rem] flex flex-col gap-y-4'>
+ <span className='w-[48.25rem] flex flex-col gap-y-4'>
             <div id="dropzone" className='h-36 flex justify-center items-center  bg-[#1E1E1E] rounded-lg outline-none'>
             <p className='text-[#878787] font-roboto text-xl'>Drag 'n' Drop your images or videos here, or click here</p>
             </div>
@@ -281,7 +281,7 @@ const CreateCampaign = () => {
             </div>
 
             {loading? <Loader /> : 
-              <button  onClick={e=>submitCampaign(e)} className={` bg-link text-zinc-50 col-span-2   place-self-center rounded-lg text-xl py-3 h-12 w-1/2 `}>Create</button>}
+              <button  onClick={e=>submitCampaign(e)} className={` bg-link text-zinc-50 col-span-2 mt-20 mb-20   place-self-center rounded-lg text-xl py-3 h-12 w-1/2 `}>Create</button>}
             </div>
     </div>
     </div>
