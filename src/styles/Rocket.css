@@ -7,6 +7,8 @@
       transform: scale(.98) translateY(-10px);
     }
   }
+
+
 .arrow{
     animation: animateArrow 1s linear alternate-reverse infinite;
 }
@@ -34,3 +36,37 @@
       transform: scale(.98) rotate(30deg) translateY(22px) translateX(8px)
     }
   }
+
+  .graph{
+    width: 12.94px;
+    animation: animateGraph 2s linear  infinite;
+  }
+  @keyframes animateGraph {
+    0% {
+      transform: scaleY(0.1);
+    }
+    50% {
+      transform: scaleY(1);
+    }
+    100% {
+      transform: scaleY(0.1);
+    }
+  }
+
+  .graph-2{
+    width: 12.94px;
+    animation: animateGraph1 2s linear  infinite;
+
+  }
+  @keyframes animateGraph1 {
+    0% {
+      transform: scaleY(1);
+    }
+    50% {
+      transform: scaleY(0.1);
+    }
+    100% {
+      transform: scaleY(1);
+    }
+  }
+

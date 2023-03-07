@@ -15,6 +15,11 @@ import Mic1 from "../assets/Mic/Vector-2.svg";
 import Mic2 from "../assets/Mic/Vector-1.svg";
 import Mic3 from "../assets/Mic/Vector-3.svg";
 
+import Graph1 from "../assets/Graph/Vector.svg";
+import Graph2 from "../assets/Graph/Vector-1.svg";
+import Graph3 from "../assets/Graph/Vector-2.svg";
+
+import {MdOutlineCircle} from 'react-icons/md';
 
 import Back from '../components/Back';
 import Loader from '../components/Loader';
@@ -22,11 +27,12 @@ import Modal from '../components/Modal'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "../styles/Rocket.css";
+import Video from '../components/Video';
 const CreateCampaign = () => {
 
     const OpenModalContext = useContext(ModalContext);
     const [loading, setLoading] = useState(false);
-    const { createCampaign, uploadImage, address,} = useStateContext();
+    const { createCampaign, uploadImage, address, connect} = useStateContext();
     
     const navigate = useNavigate();
     const [form, setForm] = useState({
@@ -105,13 +111,13 @@ const CreateCampaign = () => {
     const submitCampaign = async (e) => {
       e.preventDefault();
         if(!address){
-          OpenModalContext.setMessage(<div className='flex flex-col text-center justify-center'>
+          OpenModalContext.setMessage(<div className='flex flex-col text-center items-center justify-center'>
             <p className='font-sans text-2xl  '>
             You need to connect your wallet to create a campaign.
           </p>
-          <p className='font-sans text-2xl '>
-            Click on the Metamask logo to connect.
-          </p>
+          <button onClick={() => connect()}  className='outline outline-black mt-5 outline-2 text-xl cursor-pointer py-1 w-48  rounded-lg'  >
+            <span className='flex flex-row items-center justify-center'><p className='mr-5 font-roboto'> Connect Wallet</p><MdOutlineCircle className='text-sm  shadow-black'/></span></button>
+            
           </div>);
           OpenModalContext.setModalOpen(true);
           return;
@@ -154,10 +160,9 @@ const CreateCampaign = () => {
   }
 
 
-    const onDrop = useCallback(acceptedFiles => {
+    const onDrop = (acceptedFiles) => {
 
       // Do something with the files
-      console.log(acceptedFiles);
       OpenModalContext.setMessage(<div className='flex flex-col text-center justify-center'>
       <p className='font-sans text-2xl  '>
       Are you sure you want to upload these files?
@@ -171,7 +176,7 @@ const CreateCampaign = () => {
     </div>
     </div>)
     OpenModalContext.setModalOpen(true);
-    }, [])
+    }
 
     const handleImage = (files) => {
       const temp = [...form.image];
@@ -207,6 +212,9 @@ const CreateCampaign = () => {
       <img src={Arrow3} alt="arrow" className='arrow absolute left-[71.67%] right-[17.06%] top-[37.86%] bottom-[50.13%]'/>
       <img src={Mic1} alt="mic" className='mic1 absolute left-[80.67%] right-[17.06%] top-[51.87%] h-[60.91px] bottom-[50.13%]'/>
       <img src={Mic2} alt="mic" className='mic absolute left-[65.67%] right-[17.06%] top-[52.50%] w-[75.7px] h-[60.91px] bottom-[50.13%]'/>
+      <img src={Graph1} alt="graph" className='graph graph-1 h-[16.55px]  absolute left-[21.67%]  top-[58.36%]   bottom-[50.13%]'/>
+      <img src={Graph2} alt="graph" className='graph-2 h-[16.55px]  absolute left-[25.67%]  top-[58.36%]   bottom-[50.13%]'/>
+      <img src={Graph3} alt="graph" className='graph graph-3 h-[16.55px]  absolute left-[29.67%]  top-[58.36%]   bottom-[50.13%]'/>
       {/* <img src={Mic3} alt="mic" className='mic1 absolute left-[67.67%] right-[17.06%] top-[54.36%] h-[4.32px] w-[17.05px] bottom-[50.13%]'/> */}
       </div>
     </div>
@@ -215,16 +223,16 @@ const CreateCampaign = () => {
     <h1 className='font-roboto text-white  text-4xl'>Your <em className='text-link font-roboto'> Campaign Wizard</em></h1>
     <p className='text-[#878787] text-xl font-normal text-left font-roboto w-4/5'>Start your journey of creating amazing campaigns with just these simple steps</p>
     </span>
-            <span data-aos="fade-right" className='w-[48.25rem] flex flex-col mt-10 gap-y-4'>
+            <span  className='w-[48.25rem] flex flex-col mt-10 gap-y-4'>
             <label htmlFor="owner"  className='text-white font-roboto  text-xl'>Campaign Name</label>
             <input type="text" placeholder="My new campaign" id='owner' className='h-10 pl-2 text-[#878787] bg-[#1E1E1E] rounded-lg outline-none' value={form.name} onChange={(e) => handleFormFieldChange('name', e)} />
             </span>
             <div className='flex flex-row w-full justify-start gap-x-36' >
-            <span  data-aos="fade-left" className='w-64 mb-10 flex flex-col mt-5 gap-y-1'>
+            <span   className='w-64 mb-10 flex flex-col mt-5 gap-y-1'>
             <label htmlFor="amount" className='text-white font-roboto  text-xl'>Amount</label>
             <input type="text" placeholder="Amount" id="amount" className='h-10 pl-2 text-[#878787] bg-[#1E1E1E] rounded-lg outline-none' value={form.target} onChange={(e) => handleFormFieldChange('target', e)} />
             </span>
-            <span data-aos="fade-right" className='w-64 mb-10 mt-5  flex flex-col gap-y-1 '>
+            <span  className='w-64 mb-10 mt-5  flex flex-col gap-y-1 '>
             <label htmlFor="date" className='text-white font-roboto  text-xl'>End Date</label>
             
             <DatePicker
@@ -235,50 +243,50 @@ const CreateCampaign = () => {
       minDate={addDays(new Date(),1)}
       maxDate={addMonths(new Date(), 6)}
       showDisabledMonthNavigation
-      className=' h-10 pl-2 outline-none text-[#878787] bg-[#1E1E1E] rounded-lg'
+      className=' h-10 pl-2 outline-none  text-[#878787] bg-[#1E1E1E] rounded-lg'
     />
 
             </span>
             </div>
-            <span data-aos="fade-right" className='w-[48.25rem] flex flex-col gap-y-4'>
+            <span  className='w-[48.25rem] flex flex-col gap-y-4'>
             <label htmlFor="description" className='text-white font-roboto  text-xl'>About your campaign</label>
-            <textarea placeholder="Give a description about your campaign" id="description" className='h-36 pl-2 text-[#878787] bg-[#1E1E1E] rounded-lg outline-none' value={form.description} onChange={(e) => handleFormFieldChange('description', e)} />
+            <textarea placeholder="Give a description about your campaign" id="description" className='h-36  pl-2 text-[#878787]  bg-[#1E1E1E] rounded-lg outline-none' value={form.description} onChange={(e) => handleFormFieldChange('description', e)} />
             </span>
 
             
-            <span data-aos="fade-left" className='flex flex-col gap-y-4 mt-5'>
+            <span  className='flex flex-col gap-y-4 mt-5'>
             <label htmlFor="dropzone" className='text-white font-roboto  text-xl'>Upload Image/Video </label>
-            
+            <div className='flex flex-row flex-wrap gap-x-10'>
+            {
+              form.image.length > 0 && form.image.map((file, index) => {
+                return(
+                  <div key={index}>
+{                  file.type.includes("image") ? <img src={file.preview}  alt="image" className=' w-64  object-scale-down mt-2 border-2 border-link'/> :
+                file.type.includes("video") ? <Video source={file.preview} border={true}/> : <div></div>}
+                  </div>
+                )
+              })
+            }
+            </div>    
     <div {...getRootProps()}>
       <input {...getInputProps()} accept="image/*,video/*"/>
       {
         isDragActive ?
-        <span  className='w-[48.25rem] flex flex-col gap-y-4'>
+        <span  className='w-48 flex flex-col gap-y-4'>
             <div id="dropzone" className='h-36 flex justify-center items-center text-[#878787] bg-[#1E1E1E] rounded-lg  outline-dashed'>
             <p className='text-[#878787] font-roboto text-xl'>Drop the files here ...</p>
             </div>
             </span>
  :
- <span className='w-[48.25rem] flex flex-col gap-y-4'>
+ <span className='w-48 flex flex-col gap-y-4'>
             <div id="dropzone" className='h-36 flex justify-center items-center  bg-[#1E1E1E] rounded-lg outline-none'>
-            <p className='text-[#878787] font-roboto text-xl'>Drag 'n' Drop your images or videos here, or click here</p>
+            <p className='text-[#878787] font-roboto text-5xl'>+</p>
             </div>
             </span>
       }
     </div>
             </span>
-            <div className='flex flex-row gap-x-10'>
-            {
-              form.image.length > 0 && form.image.map((file, index) => {
-                return(
-                  <div key={index} className='flex flex-col gap-y-1'>
-{                  file.type.includes("image") ? <img src={file.preview} alt="image" className='h-56 w-56 object-scale-down mt-2'/> :
-                file.type.includes("video") ? <video controls  src={file.preview} alt="video" className='h-56 w-56 mt-2'/> : <div></div>}
-                  </div>
-                )
-              })
-            }
-            </div>
+            
 
             {loading? <Loader /> : 
               <button  onClick={e=>submitCampaign(e)} className={` bg-link text-zinc-50 col-span-2 mt-20 mb-20   place-self-center rounded-lg text-xl py-3 h-12 w-1/2 `}>Create</button>}

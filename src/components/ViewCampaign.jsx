@@ -5,6 +5,7 @@ import { useLocation } from 'react-router'
 import { useStateContext } from '../context';
 import { ModalContext } from '../context/ModalContext';
 import Modal from './Modal';
+import Video from './Video';
 
 const ViewCampaign = ({campaign,id}) => {
     const {address, receiveFunds, connect, balance} = useStateContext();
@@ -19,6 +20,11 @@ const ViewCampaign = ({campaign,id}) => {
     const validate = () => {
         if(balance.data?.displayValue < amount){
             OpenModalContext.setMessage('Balance is low');
+            OpenModalContext.setModalOpen(true);
+            return false
+        }
+        else if(amount < 0.01){
+            OpenModalContext.setMessage('Minimum donation is 0.01 ETH');
             OpenModalContext.setModalOpen(true);
             return false
         }
@@ -52,8 +58,8 @@ const ViewCampaign = ({campaign,id}) => {
 
                 if(index%2 !== 0){
                     return img.includes('video')?
-                    <video src={campaign.image[index-1]} className='w-72 h-72 mt-5' autoPlay={false} loop controls={true}/> :
-                      <img src={campaign.image[index-1]} alt='exploreCard' className='w-72 h-72  object-cover mt-5'/> 
+                    <Video source={campaign.image[index-1]} border={true}  width={80}/> :
+                      <img src={campaign.image[index-1]} alt='exploreCard' className=' w-80 border-2 border-link  object-cover mt-5'/> 
                 }
             })}
         </div>

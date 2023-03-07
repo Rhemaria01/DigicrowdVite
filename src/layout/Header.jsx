@@ -3,9 +3,7 @@ import { ModalContext } from '../context/ModalContext';
 import { useStateContext } from '../context';
 import {useNavigate, Link} from 'react-router-dom';
 import Logo from '../assets/logo.svg'
-import {BsFillCircleFill} from 'react-icons/bs';
 import {MdOutlineCircle} from 'react-icons/md';
-import MetamaskLogo from '../components/MetamaskLogo';
 
 const Header = () => {
   const OpenModalContext = useContext(ModalContext);

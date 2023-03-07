@@ -1,7 +1,5 @@
 import React,{ useState, useEffect} from 'react';
-import { Navigation, Pagination, Scrollbar, A11y, Autoplay } from 'swiper';
 import Loader from './Loader';
-import { Swiper, SwiperSlide } from 'swiper/react';
 import { useStateContext } from '../context';
 // import erc20 from "../ercEBI.json"
 // Import Swiper styles
