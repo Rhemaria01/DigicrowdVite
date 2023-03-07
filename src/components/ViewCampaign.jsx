@@ -7,7 +7,7 @@ import { ModalContext } from '../context/ModalContext';
 import Modal from './Modal';
 import Video from './Video';
 
-const ViewCampaign = ({campaign,id}) => {
+const ViewCampaign = ({campaign,id,setChanged}) => {
     const {address, receiveFunds, connect, balance} = useStateContext();
     const isCampaigner = campaign.owner === address
     const [amount, setAmount] = useState(0);
@@ -41,7 +41,8 @@ const ViewCampaign = ({campaign,id}) => {
         setLoading(false);
         OpenModalContext.setMessage(<h1 className='text-black font-bold text-xl'>Thank you for your Donation of {amount} ETH</h1>);
         OpenModalContext.setModalOpen(true);
-        window.location.reload(false)
+        setAmount(0);
+        setChanged(true);
     }
       }
       const handleInput = (e) => {
@@ -58,8 +59,8 @@ const ViewCampaign = ({campaign,id}) => {
 
                 if(index%2 !== 0){
                     return img.includes('video')?
-                    <Video source={campaign.image[index-1]} border={true}  width={80}/> :
-                      <img src={campaign.image[index-1]} alt='exploreCard' className=' w-80 border-2 border-link  object-cover mt-5'/> 
+                    <Video source={campaign.image[index-1]} border={true}  width={80} key={index-1}/> :
+                    <a href={campaign.image[index-1]} target="_blank" key={index-1} ><img src={campaign.image[index-1]} alt='exploreCard' className=' w-80 border-2 border-link  object-cover mt-5'/>  </a>
                 }
             })}
         </div>
@@ -80,7 +81,7 @@ const ViewCampaign = ({campaign,id}) => {
             </div> : <></>}
             </div> 
     </div>
-    <div className='flex flex-col mb-10' data-aos="fade-right">
+    <div className={`flex flex-col mb-10 ${OpenModalContext.modalOpen && "blur-md"}`} data-aos="fade-right">
         <h1 className='text-white text-5xl font-roboto mt-5 mb-2'>List of Donaters</h1>
         <ul>
             {campaign.donators.length ===0 ? isCampaigner ? <li className='text-white font-roboto text-lg mt-2'> No Donations Yet :( </li> : <li className='text-white font-roboto text-lg mt-2'> Donate and become the first donator of the campaign</li> :

@@ -36,11 +36,11 @@ const Explore = () => {
         <h1 className='text-white font-roboto font-extrabold  md:text-6xl sm:text-4xl text-left mb-20' data-aos="fade-up">Our Recent <em className='text-link extrabold font-roboto'>Campaigns</em></h1>
         {
         isCampaignsLoading ? <div className='flex justify-center h-[30rem]'><Loader /></div> :
-        <div className='flex flex-row'>
+        <div className='flex flex-row' >
        {campaigns.map((campaign, index) => {
           return (
 
-              <ExploreCard  campaign={campaign} index={index} />
+              <ExploreCard key={index}  campaign={campaign} index={index} />
 
           )
         })}

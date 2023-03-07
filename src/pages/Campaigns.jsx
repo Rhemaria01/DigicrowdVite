@@ -13,12 +13,14 @@ const Campaigns = () => {
     const navigate = useNavigate();
     const [userCampaigns, setCampaigns] = React.useState([]);
     const [isCampaignsLoading, setIsCampaignsLoading] = React.useState(false);
+    const [indexes, setIndexes] = React.useState([]);
     const fetchCampaigns = async () => {
     setIsCampaignsLoading(true);
     const res = await getCampaigns();
-    const userCampaigns = res.filter(campaign => campaign.owner === address && Math.floor((campaign.deadline - new Date().getTime())/ (1000 * 3600 * 24)) >= 0);
-
-    
+    const userIndexes = [];
+     res.filter((element,index) => element.owner === address ?  userIndexes.push(index) : null) ;
+     const userCampaigns = userIndexes.map(index => res[index]);
+    setIndexes(userIndexes);
     setCampaigns(userCampaigns);
     setIsCampaignsLoading(false);
   }
@@ -31,13 +33,13 @@ const Campaigns = () => {
     <>
         <Back />
 
-        <div className='container mx-auto h-[80vh] flex flex-col justify-evenly'>
-        <h1 className='text-link   md:text-6xl sm:text-4xl text-center'>Campaigns</h1>
-        <div className='flex flex-row gap-x-20 gap-y-10'  data-aos="fade-up">
+        <div className='container mx-auto '>
+        <h1 className='text-link   md:text-6xl sm:text-4xl text-center mt-10'>Campaigns</h1>
+        <div className='flex flex-row flex-wrap  gap-y-10 mt-40'  data-aos="fade-up">
         {
             isCampaignsLoading ? <Loader /> : userCampaigns && userCampaigns.map((campaign, index) => {
                 return (
-                    <ExploreCard key={index} campaign={campaign} />
+                    <ExploreCard key={index} campaign={campaign} index={indexes[index]}/>
 
                 )
             })

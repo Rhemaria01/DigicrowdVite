@@ -57,13 +57,6 @@ const CreateCampaign = () => {
       }
     }
 
-
-
-    const handleSubmit = (fieldName,e) => {
-      setForm({
-        ...form,[fieldName]: e.target.files[0]});
-      OpenModalContext.setModalOpen(false);
-    }
     const validateForm = async (form) => {
       console.log(form);
       if(form.name === '' || form.description === '' || form.target === '' || form.deadline === '' || form.image === ''){
@@ -192,12 +185,21 @@ const CreateCampaign = () => {
       });
       OpenModalContext.setModalOpen(false);
     }
+
+    const removeImage = (index) => {
+      const temp = [...form.image];
+      temp.splice(index,1);
+      setForm({
+        ...form,image: [...temp]
+      });
+    }
+
   
     const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop})
   
   return (
     <>
-    <div className= {`container mx-auto flex flex-col   font-sans ${OpenModalContext.modalOpen && "blur-md"}`}>
+    <div className= {`container mx-auto flex flex-col    font-sans ${OpenModalContext.modalOpen && "blur-md"}`}>
     <Back />
 
 
@@ -256,39 +258,39 @@ const CreateCampaign = () => {
             
             <span  className='flex flex-col gap-y-4 mt-5'>
             <label htmlFor="dropzone" className='text-white font-roboto  text-xl'>Upload Image/Video </label>
-            <div className='flex flex-row flex-wrap gap-x-10'>
+            <div className='flex flex-row flex-wrap gap-x-10 gap-y-5'>
             {
               form.image.length > 0 && form.image.map((file, index) => {
                 return(
                   <div key={index}>
-{                  file.type.includes("image") ? <img src={file.preview}  alt="image" className=' w-64  object-scale-down mt-2 border-2 border-link'/> :
-                file.type.includes("video") ? <Video source={file.preview} border={true}/> : <div></div>}
+{                  file.type.includes("image") ? <div className='relative  '><button onClick={() => removeImage(index)} className='text-2xl  top-1 left-[88%] absolute text-red-600 font-roboto'>X</button><a href={file.preview} target="_blank"> <img src={file.preview}  alt="image" className=' w-64 object-scale-down mt-2 border-2 border-link'/> </a> </div>:
+                file.type.includes("video") ? <div className='relative '><button onClick={() => removeImage(index)} className='text-2xl  top-1 left-[88%] z-50 absolute text-red-600 font-roboto'>x</button><Video  source={file.preview} border={true}/> </div>: <div></div>}
                   </div>
                 )
               })
             }
-            </div>    
     <div {...getRootProps()}>
       <input {...getInputProps()} accept="image/*,video/*"/>
       {
         isDragActive ?
-        <span  className='w-48 flex flex-col gap-y-4'>
+        <span  className='aspect-video w-48 flex flex-col gap-y-4'>
             <div id="dropzone" className='h-36 flex justify-center items-center text-[#878787] bg-[#1E1E1E] rounded-lg  outline-dashed'>
             <p className='text-[#878787] font-roboto text-xl'>Drop the files here ...</p>
             </div>
             </span>
  :
- <span className='w-48 flex flex-col gap-y-4'>
-            <div id="dropzone" className='h-36 flex justify-center items-center  bg-[#1E1E1E] rounded-lg outline-none'>
+ <span className='aspect-video w-48 flex flex-col gap-y-4 cursor-pointer	'>
+            <div id="dropzone" className='h-36 flex justify-center items-center   bg-[#1E1E1E] rounded-lg outline-none'>
             <p className='text-[#878787] font-roboto text-5xl'>+</p>
             </div>
             </span>
       }
     </div>
+            </div>    
             </span>
             
 
-            {loading? <Loader /> : 
+            {loading? <button className={` bg-link text-zinc-50 col-span-2 mt-20 mb-20 cursor-wait font-roboto place-self-center rounded-lg text-xl py-3 h-12 w-1/2 `}>Creating...</button>  : 
               <button  onClick={e=>submitCampaign(e)} className={` bg-link text-zinc-50 col-span-2 mt-20 mb-20   place-self-center rounded-lg text-xl py-3 h-12 w-1/2 `}>Create</button>}
             </div>
     </div>
