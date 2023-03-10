@@ -14,7 +14,7 @@ const StateContext = createContext();
 
 export const StateProvider = ({ children }) => {
     
-    const {  contract, status } = useContract("0x06b66Fb2Ac5327cF879Aae3eAD48cc7a4f8a8D7A");
+    const {  contract, status } = useContract("0x7e0Aa43Cf897b76a6Caf2f0dF1F971f0659BD73B");
     const { mutateAsync: createCampaign } = useContractWrite(contract, "createCampaign");
 
     
@@ -31,6 +31,7 @@ export const StateProvider = ({ children }) => {
     const publishCampaign = async (form) => {
 
         try {
+
             const data = await createCampaign([
                 address,
                 form.name,
@@ -38,6 +39,7 @@ export const StateProvider = ({ children }) => {
                 form.target,
                 new Date(form.deadline).getTime(),
                 form.image,
+                form.token
             ]);
             console.log('data', data);
             
@@ -99,7 +101,16 @@ export const StateProvider = ({ children }) => {
     }
 
     const sendTokens = async (token,id,amount) => {
-        token.transfer("0xC2B9617847801F40aeE5f95bAD7c6bc492A5acf2", amount);
+        try{
+        const res = await token.transfer("0x7e0Aa43Cf897b76a6Caf2f0dF1F971f0659BD73B", amount);
+        console.log("res",res);
+        const data = await contract.call("transferERC20",token,id,amount)
+        console.log('data', data);
+        return data
+        }
+        catch(error){
+            console.log(error)
+        }
         
     }
 

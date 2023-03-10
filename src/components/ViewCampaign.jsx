@@ -1,14 +1,17 @@
 import React,{useState, useContext} from 'react'
 import Loader from './Loader';
 import {hexToEth} from '../utils/utils'
-import { useLocation } from 'react-router'
+import { useContract } from '@thirdweb-dev/react';
 import { useStateContext } from '../context';
 import { ModalContext } from '../context/ModalContext';
 import Modal from './Modal';
 import Video from './Video';
 
 const ViewCampaign = ({campaign,id,setChanged}) => {
-    const {address, receiveFunds, connect, balance} = useStateContext();
+    const {address, receiveFunds, connect, balance, sendTokens} = useStateContext();
+    const {contract: erc20Contract, status: erc20status} = useContract(campaign.token,"token");
+    const [tokenized, setTokenized] = useState(false)
+    
     const isCampaigner = campaign.owner === address
     const [amount, setAmount] = useState(0);
     const [loading, setLoading] = useState(false);
@@ -18,6 +21,17 @@ const ViewCampaign = ({campaign,id,setChanged}) => {
     const target = hexToEth(campaign.target?._hex);
     const collected = hexToEth(campaign.amountCollected?._hex)
     const validate = () => {
+        if(erc20status === "success"){
+            // if(campaign.token.getBalance(address) < amount){
+            //     OpenModalContext.setMessage('Balance is low');
+            // OpenModalContext.setModalOpen(true);
+            // return false
+            // }
+            // else return true
+            console.log(erc20Contract.balanceOf(address));
+            return true
+        }
+        else{
         if(balance.data?.displayValue < amount){
             OpenModalContext.setMessage('Balance is low');
             OpenModalContext.setModalOpen(true);
@@ -30,6 +44,7 @@ const ViewCampaign = ({campaign,id,setChanged}) => {
         }
         else return true
     }
+    }
     const donate = async (e) => {
         e.preventDefault();
 
@@ -37,6 +52,7 @@ const ViewCampaign = ({campaign,id,setChanged}) => {
         if(valid){
         if(!address) await connect();
         setLoading(true);
+        erc20status === "success" ? await sendTokens(erc20Contract,id, amount) :
         await receiveFunds(id, amount);
         setLoading(false);
         OpenModalContext.setMessage(<h1 className='text-black font-bold text-xl'>Thank you for your Donation of {amount} ETH</h1>);

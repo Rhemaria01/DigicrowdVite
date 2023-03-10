@@ -41,9 +41,10 @@ const CreateCampaign = () => {
       description: '',
       target: '',
       deadline: addDays(new Date(),1),
-      image: []
+      image: [],
+      token: '',
     });
-
+    const [checked, setChecked] = useState(false)
     const handleFormFieldChange = (fieldName, e) => {
 
       if(fieldName === 'deadline'){
@@ -58,7 +59,7 @@ const CreateCampaign = () => {
     }
 
     const validateForm = async (form) => {
-      console.log(form);
+      
       if(form.name === '' || form.description === '' || form.target === '' || form.deadline === '' || form.image === ''){
         OpenModalContext.setMessage(<div className='flex flex-col text-center justify-center'>
           <p className='font-sans text-2xl  '>
@@ -95,7 +96,15 @@ const CreateCampaign = () => {
         OpenModalContext.setModalOpen(true);
         return false;
       }
-
+      else if(checked && (form.token == "" || form.token=="none")){
+        OpenModalContext.setMessage(<div className='flex flex-col text-center justify-center'>
+          <p className='font-sans text-2xl  '>
+          Please Select a Token
+        </p>
+        </div>);
+        OpenModalContext.setModalOpen(true);
+        return false;
+      }
       else{
         return true;
       }
@@ -247,7 +256,20 @@ const CreateCampaign = () => {
       showDisabledMonthNavigation
       className=' h-10 pl-2 outline-none  text-[#878787] bg-[#1E1E1E] rounded-lg'
     />
-
+            
+            </span>
+            <span  className='w-64 mb-10 mt-5  flex flex-col gap-y-1 '>
+            <div>
+            <input type="checkbox" checked={checked} onChange={() => setChecked(!checked)} className=' text-link rounded-md bg-[#1E1E1E] outline-1 outline-white h-4 w-4 mr-2'/>
+            <label htmlFor="date" className='text-white font-roboto  text-xl'>Use token</label>
+            
+            </div>
+            {checked ? 
+            <select name="tokens" className='bg-[#1E1E1E] text-white h-10 w-3/4' onChange={(e) => handleFormFieldChange('token',e)}>
+              <option value="none" defaultValue>[Select Token]</option>
+              <option value="0xBA62BCfcAaFc6622853cca2BE6Ac7d845BC0f2Dc">Faucet</option>
+            </select>
+            :null}
             </span>
             </div>
             <span  className='w-[48.25rem] flex flex-col gap-y-4'>
