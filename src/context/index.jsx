@@ -6,7 +6,8 @@ import { useAddress,
     useContractRead,
     useDisconnect, 
     useBalance,
-    useStorageUpload  } from "@thirdweb-dev/react";
+    useStorageUpload,
+    useTokenBalance } from "@thirdweb-dev/react";
 import { ethers } from "ethers";
 
 const StateContext = createContext();
@@ -14,8 +15,9 @@ const StateContext = createContext();
 export const StateProvider = ({ children }) => {
     
     const {  contract, status } = useContract("0x06b66Fb2Ac5327cF879Aae3eAD48cc7a4f8a8D7A");
-    const { mutateAsync: createCampaign } = useContractWrite(contract, "createCampaign")
+    const { mutateAsync: createCampaign } = useContractWrite(contract, "createCampaign");
 
+    
     
     
     
@@ -24,7 +26,8 @@ export const StateProvider = ({ children }) => {
     const connect = useMetamask();
     const disconnect = useDisconnect();
     const balance = useBalance();
-    // const image = "https://gateway.ipfscdn.io/ipfs/Qma3fbBQqp4f9yv89uyN5nsc1pNLDNFP6qmAncwCAksvZ9"
+
+
     const publishCampaign = async (form) => {
 
         try {
@@ -95,10 +98,16 @@ export const StateProvider = ({ children }) => {
         }
     }
 
+    const sendTokens = async (token,id,amount) => {
+        token.transfer("0xC2B9617847801F40aeE5f95bAD7c6bc492A5acf2", amount);
+        
+    }
+
+    
 
     return (
         <StateContext.Provider 
-        value={{address,status,  createCampaign: publishCampaign, connect, disconnect, balance, uploadImage, getCampaigns, getCampaign, receiveFunds}}>
+        value={{address,status,  createCampaign: publishCampaign, connect, disconnect, balance, uploadImage, getCampaigns, getCampaign, receiveFunds, sendTokens}}>
             {children}
         </StateContext.Provider>
     )

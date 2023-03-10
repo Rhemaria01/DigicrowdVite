@@ -1,6 +1,5 @@
 import React,{useState,useEffect} from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-
 import { ModalContext } from './context/ModalContext';
 import LandingPage from './pages/LandingPage';
 import CreateCampaign from './pages/CreateCampaign';
@@ -13,6 +12,8 @@ import 'aos/dist/aos.css';
 import Header from './layout/Header';
 
 export default function Home() {
+
+
   const [modalOpen, setModalOpen] = useState(false);
   const [message, setMessage] = useState('');
   useEffect(() => {
