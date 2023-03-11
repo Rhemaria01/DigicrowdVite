@@ -1,4 +1,4 @@
-import React,{useState, useContext, useCallback} from 'react'
+import React,{useState, useContext} from 'react'
 
 import { ModalContext } from '../context/ModalContext';
 import { useNavigate } from 'react-router';
@@ -28,12 +28,13 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "../styles/Rocket.css";
 import Video from '../components/Video';
+import Verification from '../components/Verification';
 const CreateCampaign = () => {
 
     const OpenModalContext = useContext(ModalContext);
     const [loading, setLoading] = useState(false);
     const { createCampaign, uploadImage, address, connect} = useStateContext();
-    
+    const [verified, setVerified] = useState(false);
     const navigate = useNavigate();
     const [form, setForm] = useState({
       name: '',
@@ -229,6 +230,9 @@ const CreateCampaign = () => {
       {/* <img src={Mic3} alt="mic" className='mic1 absolute left-[67.67%] right-[17.06%] top-[54.36%] h-[4.32px] w-[17.05px] bottom-[50.13%]'/> */}
       </div>
     </div>
+    {
+      verified ? 
+    
     <div className='col-span-3 flex flex-col justify-center items-start'>
     <span className='col-span-2'>
     <h1 className='font-roboto text-white  text-4xl'>Your <em className='text-link font-roboto'> Campaign Wizard</em></h1>
@@ -267,7 +271,10 @@ const CreateCampaign = () => {
             {checked ? 
             <select name="tokens" className='bg-[#1E1E1E] text-white h-10 w-3/4' onChange={(e) => handleFormFieldChange('token',e)}>
               <option value="none" defaultValue>[Select Token]</option>
-              <option value="0xBA62BCfcAaFc6622853cca2BE6Ac7d845BC0f2Dc">Faucet</option>
+              <option value="0xBA62BCfcAaFc6622853cca2BE6Ac7d845BC0f2Dc">Faucet (FAU)</option>
+              <option value="0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6">Wrapped Ether (WETH)</option>
+              <option value="0xf5de760f2e916647fd766b4ad9e85ff943ce3a2b">MultiFaucetNFT (MFNFT)</option>
+              <option value="0xcc7bb2d219a0fc08033e130629c2b854b7ba9195">Zeta (Zeta)</option>
             </select>
             :null}
             </span>
@@ -315,6 +322,7 @@ const CreateCampaign = () => {
             {loading? <button className={` bg-link text-zinc-50 col-span-2 mt-20 mb-20 cursor-wait font-roboto place-self-center rounded-lg text-xl py-3 h-12 w-1/2 `}>Creating...</button>  : 
               <button  onClick={e=>submitCampaign(e)} className={` bg-link text-zinc-50 col-span-2 mt-20 mb-20   place-self-center rounded-lg text-xl py-3 h-12 w-1/2 `}>Create</button>}
             </div>
+    : <Verification setVerified={setVerified}/>}
     </div>
     </div>
     {OpenModalContext.modalOpen && <Modal/>}

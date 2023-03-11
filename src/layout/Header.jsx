@@ -1,7 +1,9 @@
 import React,{useContext,useState} from 'react'
 import { ModalContext } from '../context/ModalContext';
 import { useStateContext } from '../context';
+import MetamaskLogo from '../components/MetamaskLogo';
 import {useNavigate, Link} from 'react-router-dom';
+import {BsChevronDown} from 'react-icons/bs';
 import Logo from '../assets/logo.svg'
 import {MdOutlineCircle} from 'react-icons/md';
 
@@ -9,9 +11,10 @@ const Header = () => {
   const OpenModalContext = useContext(ModalContext);
   const { connect, address, disconnect, balance } = useStateContext();
   // console.log(address);
-  
+  const [opened, setOpened] = useState(false);
   const navigate = useNavigate();
   const handleLogout = () => {
+    setOpened(false);
     disconnect();
     navigate('/');
   }
@@ -43,12 +46,22 @@ const Header = () => {
             </ul>
 
             {address  ?
-            <div className='flex flex-row items-center'>
-            <span className='flex flex-row items-center gap-x-4'>
-            <p className='text-zinc-50 text-2xl font-bold'>  {balance.data && balance.data?.displayValue.slice(0,6) + " " + balance.data?.symbol}  </p>
-            </span>
-            <button className='text-zinc-50 ml-10 bg-link font-sans text-lg font-extrabold px-7 py-2 rounded-full' onClick={handleLogout}>Log Out</button>
+              <>
+
+            <div className='relative'>
+            <div className='flex flex-row items-center outline shadow-lg shadow-slate-400 rounded-lg pl-3 pr-2 outline-4 outline-zinc-50'>
+              <MetamaskLogo width='40' height='40' />
+              <div className='flex flex-col items-center ml-3'>
+                <p className='text-zinc-50 text-lg font-roboto font-bold '>{address.slice(0,6) + "..." + address.slice(-4)}</p>
+                <p className='text-zinc-50 text-lg font-roboto font-bold'>  {balance.data && balance.data?.displayValue.slice(0,6) + " " + balance.data?.symbol}  </p>
+              </div>
+              <button className='text-zinc-50 text-3xl ml-3' onClick={() => setOpened(!opened)}><BsChevronDown /> </button>
             </div>
+            <div className={`absolute w-full pt-1  ${!opened && "hidden"}   flex flex-col divide-y`}>
+            <button className='text-zinc-50 text-start pl-3 text-lg font-roboto rounded-b-lg   font-bold bg-zinc-900 cursor-pointer py-2' onClick={handleLogout}>Disconnect</button>
+            </div>
+            </div>
+            </>
              :
             <>
 

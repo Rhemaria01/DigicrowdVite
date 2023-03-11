@@ -1,7 +1,7 @@
-import React,{useState, useContext} from 'react'
+import React,{useState, useContext, useEffect} from 'react'
 import Loader from './Loader';
 import {hexToEth} from '../utils/utils'
-import { useContract } from '@thirdweb-dev/react';
+import { useContract, useTokenBalance } from '@thirdweb-dev/react';
 import { useStateContext } from '../context';
 import { ModalContext } from '../context/ModalContext';
 import Modal from './Modal';
@@ -10,7 +10,8 @@ import Video from './Video';
 const ViewCampaign = ({campaign,id,setChanged}) => {
     const {address, receiveFunds, connect, balance, sendTokens} = useStateContext();
     const {contract: erc20Contract, status: erc20status} = useContract(campaign.token,"token");
-    const [tokenized, setTokenized] = useState(false)
+
+   
     
     const isCampaigner = campaign.owner === address
     const [amount, setAmount] = useState(0);
@@ -22,14 +23,15 @@ const ViewCampaign = ({campaign,id,setChanged}) => {
     const collected = hexToEth(campaign.amountCollected?._hex)
     const validate = () => {
         if(erc20status === "success"){
-            // if(campaign.token.getBalance(address) < amount){
-            //     OpenModalContext.setMessage('Balance is low');
-            // OpenModalContext.setModalOpen(true);
-            // return false
-            // }
-            // else return true
-            console.log(erc20Contract.balanceOf(address));
-            return true
+            
+            if(parseFloat(tokenInfo.res.displayValue )< amount){
+            OpenModalContext.setMessage('Balance is low');
+            OpenModalContext.setModalOpen(true);
+            return false
+            }
+            else return true
+
+
         }
         else{
         if(balance.data?.displayValue < amount){
@@ -52,10 +54,10 @@ const ViewCampaign = ({campaign,id,setChanged}) => {
         if(valid){
         if(!address) await connect();
         setLoading(true);
-        erc20status === "success" ? await sendTokens(erc20Contract,id, amount) :
+        erc20status === "success" ? await sendTokens(erc20Contract,campaign.token,id, amount) :
         await receiveFunds(id, amount);
         setLoading(false);
-        OpenModalContext.setMessage(<h1 className='text-black font-bold text-xl'>Thank you for your Donation of {amount} ETH</h1>);
+        OpenModalContext.setMessage(<h1 className='text-black font-bold text-xl'>Thank you for your Donation of {amount} {Object.keys(tokenInfo).length > 0 ? tokenInfo.res.symbol : "ETH"}</h1>);
         OpenModalContext.setModalOpen(true);
         setAmount(0);
         setChanged(true);
@@ -66,11 +68,24 @@ const ViewCampaign = ({campaign,id,setChanged}) => {
         
         if(!isNaN(value)) setAmount(value);
       }
+        const [tokenInfo, setTokenInfo] = useState({});
+        useEffect(() => {
+            if(erc20status === "success"){
+                erc20Contract.balanceOf(address).then(res => {
+                    setTokenInfo({
+                        res
+                    })
+                    OpenModalContext.setMessage(`This Campaign only accepts ${res.name}. Make sure you have enough balance in your wallet to donate.`);
+                    OpenModalContext.setModalOpen(true);
+                })
+                
+            }
+        }, [erc20status])
   return (
 <>
 <div className='container mx-auto'>
     <div className={`flex  flex-row pt-20  justify-start items-start ${OpenModalContext.modalOpen && "blur-md"}`}>
-        <div className='flex flex-row flex-wrap gap-x-10  w-2/4 ' data-aos="fade-right">
+        <div className='flex flex-row flex-wrap gap-x-10  w-2/4 ' >
             {campaign.image.map((img, index) => {
 
                 if(index%2 !== 0){
@@ -81,10 +96,14 @@ const ViewCampaign = ({campaign,id,setChanged}) => {
             })}
         </div>
             
-        <div className='flex flex-col w-2/4' data-aos="fade-left">
+        <div className='flex flex-col w-2/4' >
             <h3 className="text-white font-bold text-4xl font-roboto">{campaign.title}</h3>
-            <h6 className='text-white font-light text-lg mt-2 font-roboto'>Target: {target} Eth</h6>
-            <h6 className='text-white font-light text-lg mt-2 font-roboto'>Collected: {collected} Eth</h6>
+            {Object.keys(tokenInfo).length > 0 && <> 
+            
+            <h6 className='text-link font-light text-md mt-2 font-roboto'>Your Token Balance: {tokenInfo.res.displayValue} {tokenInfo.res.symbol}</h6>
+            </>}
+            <h6 className='text-white font-light text-lg mt-2 font-roboto'>Target: {target} {Object.keys(tokenInfo).length > 0 ? tokenInfo.res.symbol : "ETH"} </h6>
+            <h6 className='text-white font-light text-lg mt-2 font-roboto'>Collected: {collected} {Object.keys(tokenInfo).length > 0 ? tokenInfo.res.symbol : "ETH"}</h6>
             
             <p className="text-white mt-5 text-xl">
             {campaign.description} <br/>
@@ -97,12 +116,12 @@ const ViewCampaign = ({campaign,id,setChanged}) => {
             </div> : <></>}
             </div> 
     </div>
-    <div className={`flex flex-col mb-10 ${OpenModalContext.modalOpen && "blur-md"}`} data-aos="fade-right">
+    <div className={`flex flex-col mb-10 ${OpenModalContext.modalOpen && "blur-md"}`} >
         <h1 className='text-white text-5xl font-roboto mt-5 mb-2'>List of Donaters</h1>
         <ul>
             {campaign.donators.length ===0 ? isCampaigner ? <li className='text-white font-roboto text-lg mt-2'> No Donations Yet :( </li> : <li className='text-white font-roboto text-lg mt-2'> Donate and become the first donator of the campaign</li> :
                 campaign.donators.map((donator, index )=> {
-                    return <li key={index} className='text-white font-roboto text-lg mt-2'>{donator} : {hexToEth(campaign.donations[index]._hex)} Eth</li>
+                    return <li key={index} className='text-white font-roboto text-lg mt-2'>{donator} : {hexToEth(campaign.donations[index]._hex)} {Object.keys(tokenInfo).length > 0 ? tokenInfo.res.symbol : "ETH"}</li>
                 })
             }
 

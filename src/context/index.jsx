@@ -3,11 +3,11 @@ import { useAddress,
     useContract, 
     useMetamask, 
     useContractWrite, 
-    useContractRead,
+    useTokenBalance,
     useDisconnect, 
     useBalance,
     useStorageUpload,
-    useTokenBalance } from "@thirdweb-dev/react";
+ } from "@thirdweb-dev/react";
 import { ethers } from "ethers";
 
 const StateContext = createContext();
@@ -16,18 +16,13 @@ export const StateProvider = ({ children }) => {
     
     const {  contract, status } = useContract("0x7e0Aa43Cf897b76a6Caf2f0dF1F971f0659BD73B");
     const { mutateAsync: createCampaign } = useContractWrite(contract, "createCampaign");
-
-    
-    
-    
-    
     const {mutateAsync: upload} = useStorageUpload();
     const address = useAddress();
     const connect = useMetamask();
     const disconnect = useDisconnect();
     const balance = useBalance();
-
-
+    
+    
     const publishCampaign = async (form) => {
 
         try {
@@ -100,11 +95,11 @@ export const StateProvider = ({ children }) => {
         }
     }
 
-    const sendTokens = async (token,id,amount) => {
+    const sendTokens = async (token,tokenAddress,id,amount) => {
         try{
         const res = await token.transfer("0x7e0Aa43Cf897b76a6Caf2f0dF1F971f0659BD73B", amount);
         console.log("res",res);
-        const data = await contract.call("transferERC20",token,id,amount)
+        const data = await contract.call("transferERC20",tokenAddress,id,address,{value: ethers.utils.parseEther(amount)})
         console.log('data', data);
         return data
         }
