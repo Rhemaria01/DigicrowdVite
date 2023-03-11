@@ -34,7 +34,7 @@ const CreateCampaign = () => {
     const OpenModalContext = useContext(ModalContext);
     const [loading, setLoading] = useState(false);
     const { createCampaign, uploadImage, address, connect} = useStateContext();
-    const [verified, setVerified] = useState(false);
+    const [verified, setVerified] = useState(true);
     const navigate = useNavigate();
     const [form, setForm] = useState({
       name: '',
@@ -136,9 +136,17 @@ const CreateCampaign = () => {
           console.log('files',files.flat());
           
           
-          await createCampaign({...form,image: files.flat(), target: ethers.utils.parseUnits(form.target,18)._hex});
+          const result = await createCampaign({...form,image: files.flat(),token: checked?form.token.split(" ")[0]:"",  target: ethers.utils.parseUnits(form.target,18)._hex});
           setLoading(false);
-          navigate('/campaigns');
+          if(result) navigate('/campaigns');
+          else {
+            OpenModalContext.setMessage(<div className='flex flex-col text-center justify-center'>
+              <p className='font-sans text-2xl  '>
+              Something went wrong. Please try again.
+            </p>
+            </div>);
+            OpenModalContext.setModalOpen(true);
+          }
         }
 
         
@@ -244,7 +252,7 @@ const CreateCampaign = () => {
             </span>
             <div className='flex flex-row w-full justify-start gap-x-36' >
             <span   className='w-64 mb-10 flex flex-col mt-5 gap-y-1'>
-            <label htmlFor="amount" className='text-white font-roboto  text-xl'>Amount</label>
+            <label htmlFor="amount" className='text-white font-roboto  text-xl'>Amount { form.token == "" || form.token=="none" ? "(in ETH)": checked? "(in "+ form.token.split(" ")[1]+")": "(in ETH)"}</label>
             <input type="text" placeholder="Amount" id="amount" className='h-10 pl-2 text-[#878787] bg-[#1E1E1E] rounded-lg outline-none' value={form.target} onChange={(e) => handleFormFieldChange('target', e)} />
             </span>
             <span  className='w-64 mb-10 mt-5  flex flex-col gap-y-1 '>
@@ -269,12 +277,12 @@ const CreateCampaign = () => {
             
             </div>
             {checked ? 
-            <select name="tokens" className='bg-[#1E1E1E] text-white h-10 w-3/4' onChange={(e) => handleFormFieldChange('token',e)}>
+            <select name="tokens" value={form.token} className='bg-[#1E1E1E] text-white h-10 w-3/4' onChange={(e) => handleFormFieldChange('token',e)}>
               <option value="none" defaultValue>[Select Token]</option>
-              <option value="0xBA62BCfcAaFc6622853cca2BE6Ac7d845BC0f2Dc">Faucet (FAU)</option>
-              <option value="0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6">Wrapped Ether (WETH)</option>
-              <option value="0xf5de760f2e916647fd766b4ad9e85ff943ce3a2b">MultiFaucetNFT (MFNFT)</option>
-              <option value="0xcc7bb2d219a0fc08033e130629c2b854b7ba9195">Zeta (Zeta)</option>
+              <option value="0xBA62BCfcAaFc6622853cca2BE6Ac7d845BC0f2Dc FAU">Faucet (FAU)</option>
+              <option value="0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6 WETH">Wrapped Ether (WETH)</option>
+              <option value="0xf5de760f2e916647fd766b4ad9e85ff943ce3a2b MFNFT">MultiFaucetNFT (MFNFT)</option>
+              <option value="0xcc7bb2d219a0fc08033e130629c2b854b7ba9195 ZETA">Zeta (Zeta)</option>
             </select>
             :null}
             </span>
@@ -315,6 +323,9 @@ const CreateCampaign = () => {
             </span>
       }
     </div>
+    <p className='text-[#878787] text-xl font-normal  text-justify font-roboto w-4/5'>*When it comes to crowdfunding campaigns, 
+      videos are given more priority than images as they are a more effective way to convey your message and showcase your product or project. 
+      So our platform prioritize videos and uses them as thumbnail as they are a more engaging and dynamic form of media that can help potential backers understand your vision and the impact their support can make.</p>
             </div>    
             </span>
             

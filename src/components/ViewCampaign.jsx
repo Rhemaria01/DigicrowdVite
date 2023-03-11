@@ -1,7 +1,7 @@
 import React,{useState, useContext, useEffect} from 'react'
 import Loader from './Loader';
 import {hexToEth} from '../utils/utils'
-import { useContract, useTokenBalance } from '@thirdweb-dev/react';
+import { useContract } from '@thirdweb-dev/react';
 import { useStateContext } from '../context';
 import { ModalContext } from '../context/ModalContext';
 import Modal from './Modal';
@@ -47,7 +47,9 @@ const ViewCampaign = ({campaign,id,setChanged}) => {
         else return true
     }
     }
-    const donate = async (e) => {
+    const [tokenInfo, setTokenInfo] = useState({});
+    const currency =   Object.keys(tokenInfo).length > 0 ? tokenInfo.res.symbol : "ETH";
+        const donate = async (e) => {
         e.preventDefault();
 
         const valid = validate()
@@ -57,7 +59,7 @@ const ViewCampaign = ({campaign,id,setChanged}) => {
         erc20status === "success" ? await sendTokens(erc20Contract,campaign.token,id, amount) :
         await receiveFunds(id, amount);
         setLoading(false);
-        OpenModalContext.setMessage(<h1 className='text-black font-bold text-xl'>Thank you for your Donation of {amount} {Object.keys(tokenInfo).length > 0 ? tokenInfo.res.symbol : "ETH"}</h1>);
+        OpenModalContext.setMessage(<h1 className='text-black font-bold text-xl'>Thank you for your Donation of {amount} {currency}</h1>);
         OpenModalContext.setModalOpen(true);
         setAmount(0);
         setChanged(true);
@@ -68,7 +70,8 @@ const ViewCampaign = ({campaign,id,setChanged}) => {
         
         if(!isNaN(value)) setAmount(value);
       }
-        const [tokenInfo, setTokenInfo] = useState({});
+
+        
         useEffect(() => {
             if(erc20status === "success"){
                 erc20Contract.balanceOf(address).then(res => {
@@ -102,8 +105,8 @@ const ViewCampaign = ({campaign,id,setChanged}) => {
             
             <h6 className='text-link font-light text-md mt-2 font-roboto'>Your Token Balance: {tokenInfo.res.displayValue} {tokenInfo.res.symbol}</h6>
             </>}
-            <h6 className='text-white font-light text-lg mt-2 font-roboto'>Target: {target} {Object.keys(tokenInfo).length > 0 ? tokenInfo.res.symbol : "ETH"} </h6>
-            <h6 className='text-white font-light text-lg mt-2 font-roboto'>Collected: {collected} {Object.keys(tokenInfo).length > 0 ? tokenInfo.res.symbol : "ETH"}</h6>
+            <h6 className='text-white font-light text-lg mt-2 font-roboto'>Target: {target} {currency} </h6>
+            <h6 className='text-white font-light text-lg mt-2 font-roboto'>Collected: {collected} {currency}</h6>
             
             <p className="text-white mt-5 text-xl">
             {campaign.description} <br/>
@@ -111,7 +114,8 @@ const ViewCampaign = ({campaign,id,setChanged}) => {
             </p>
             <p className='text-gray-500 text-xl font-bold font-roboto mt-5'>Days Left: <em className='text-link text-3xl'>{Math.floor((campaign.deadline - new Date().getTime())/ (1000 * 3600 * 24))} </em></p>
             {!isCampaigner ? <div className='flex flex-col  justify-between w-72 items-center mt-5  rounded-lg'>
-            <input type="text" className='w-72 h-11 rounded-lg bg-[#777777] pl-5 text-white outline-none' onChange={e => handleInput(e)} value={amount} placeholder='Enter Amount'/>
+            
+            <input type="text" className='w-72 h-11 rounded-lg bg-[#777777] pl-5 text-white outline-none' onChange={e => handleInput(e)} value={amount} placeholder={`Enter Amount in (${currency})`}/>
             {loading ? <div className='mt-2'>  <Loader /> </div> : <button className='bg-link text-white w-72  mt-2 rounded-lg h-11' onClick={e => donate(e)}>Donate</button>}
             </div> : <></>}
             </div> 
@@ -121,7 +125,7 @@ const ViewCampaign = ({campaign,id,setChanged}) => {
         <ul>
             {campaign.donators.length ===0 ? isCampaigner ? <li className='text-white font-roboto text-lg mt-2'> No Donations Yet :( </li> : <li className='text-white font-roboto text-lg mt-2'> Donate and become the first donator of the campaign</li> :
                 campaign.donators.map((donator, index )=> {
-                    return <li key={index} className='text-white font-roboto text-lg mt-2'>{donator} : {hexToEth(campaign.donations[index]._hex)} {Object.keys(tokenInfo).length > 0 ? tokenInfo.res.symbol : "ETH"}</li>
+                    return <li key={index} className='text-white font-roboto text-lg mt-2'>{donator} : {hexToEth(campaign.donations[index]._hex)} {currency}</li>
                 })
             }
 

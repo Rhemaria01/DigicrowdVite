@@ -14,7 +14,7 @@ const StateContext = createContext();
 
 export const StateProvider = ({ children }) => {
     
-    const {  contract, status } = useContract("0x7e0Aa43Cf897b76a6Caf2f0dF1F971f0659BD73B");
+    const {  contract, status } = useContract("0x201A2DE1D313BF00a2339618E31A81F1a17F7DB4");
     const { mutateAsync: createCampaign } = useContractWrite(contract, "createCampaign");
     const {mutateAsync: upload} = useStorageUpload();
     const address = useAddress();
@@ -37,10 +37,10 @@ export const StateProvider = ({ children }) => {
                 form.token
             ]);
             console.log('data', data);
-            
+            return true
         } catch (error) {
             console.log('error', error);
-            
+            return false
         }
     }
 
@@ -97,9 +97,9 @@ export const StateProvider = ({ children }) => {
 
     const sendTokens = async (token,tokenAddress,id,amount) => {
         try{
-        const res = await token.transfer("0x7e0Aa43Cf897b76a6Caf2f0dF1F971f0659BD73B", amount);
+        const res = await token.transfer("0x201A2DE1D313BF00a2339618E31A81F1a17F7DB4", amount);
         console.log("res",res);
-        const data = await contract.call("transferERC20",tokenAddress,id,address,{value: ethers.utils.parseEther(amount)})
+        const data = await contract.call("transferERC20",tokenAddress,id,address,ethers.utils.parseEther(amount))
         console.log('data', data);
         return data
         }

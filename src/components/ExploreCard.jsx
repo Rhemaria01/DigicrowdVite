@@ -29,7 +29,7 @@ const ExploreCard = ({campaign, index}) => {
       }
   }, [erc20status])
   return (
-    days >= 0 &&
+    (days >= 0 && collected < target) &&
     
     <div data-aos="zoom-in" className='flex justify-center cursor-pointer items-center ml-14 flex-col min-h-48 w-80 bg-slate-200 shadow-md shadow-slate-200/20 rounded-2xl'>
     {hasVideo? <Video source={video} border={false}/>: <img src={campaign.image[0]} alt='exploreCard' className='h-36 w-64  object-cover mt-5'/> }
