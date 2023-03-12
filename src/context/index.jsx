@@ -54,8 +54,6 @@ export const StateProvider = ({ children }) => {
                     uploadWithoutDirectory: true,
             }
             })
-
-            // console.log('data', data);
             return data;
         } catch (error) {
             console.log('error', error);

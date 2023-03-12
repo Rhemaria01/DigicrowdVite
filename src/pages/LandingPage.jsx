@@ -26,9 +26,9 @@ const LandingPage = () => {
     <div className={`${OpenModalContext.modalOpen && "blur-md"} `}>
 
     
-        <div className='flex lg:flex-row md:flex-col sm:flex-col h-[29.813rem] container mx-auto sm:items-center mt-28 w-[100%] '>
-        <div className=' w-[54.125rem]  space-x-4' data-aos="fade-right">
-          <p className='leading-normal font-roboto text-white font-extrabold  text-[65px]'>Revolutionizing Crowdfunding 
+        <div className='flex xl:flex-row  sm:flex-col 2xl:h-[29.813rem] container mx-auto sm:items-center mt-28 w-[100%] '>
+        <div className=' 2xl:w-[54.125rem] sm:w-1/2 space-x-4' data-aos="fade-right">
+          <p className='leading-normal font-roboto text-white font-extrabold  lg:text-[1.8rem] xl:text-[4rem]'>Revolutionizing Crowdfunding 
           for a Decentralized Future with
           
         <TypeAnimation
@@ -44,7 +44,7 @@ const LandingPage = () => {
           
          className='text-link font-roboto'
          /></p>
-          <input type="button" value="Know more" className='outline outline-1 mt-10 sm:text-xs md:text-2xl font-bold outline-stale outline-white text-white md:h-18 md:w-48  sm:w-28 sm:h-10 rounded-full ' />
+          <input type="button" value="Know more" className='outline outline-1 mt-10 sm:text-md xl:text-2xl font-bold outline-stale outline-white text-white xl:h-18 xl:w-48  sm:w-28 sm:h-10 rounded-full ' />
         </div>
 
 
