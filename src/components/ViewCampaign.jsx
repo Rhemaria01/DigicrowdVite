@@ -1,7 +1,7 @@
 import React,{useState, useContext, useEffect} from 'react'
 import Loader from './Loader';
 import {hexToEth} from '../utils/utils'
-import { useContract } from '@thirdweb-dev/react';
+import { useContract, useContractRead, useContractWrite } from '@thirdweb-dev/react';
 import { useStateContext } from '../context';
 import { ModalContext } from '../context/ModalContext';
 import Modal from './Modal';
@@ -10,8 +10,8 @@ import Video from './Video';
 const ViewCampaign = ({campaign,id,setChanged}) => {
     const {address, receiveFunds, connect, balance, sendTokens} = useStateContext();
     const {contract: erc20Contract, status: erc20status} = useContract(campaign.token,"token");
-
-   
+    const {mutateAsync: symbol} = useContractWrite(erc20Contract, "symbol");
+    
     
     const isCampaigner = campaign.owner === address
     const [amount, setAmount] = useState(0);
@@ -23,11 +23,16 @@ const ViewCampaign = ({campaign,id,setChanged}) => {
     const collected = hexToEth(campaign.amountCollected?._hex)
     const validate = () => {
         if(erc20status === "success"){
-            
-            if(parseFloat(tokenInfo.res.displayValue )< amount){
+            const userBalance = parseFloat(tokenInfo.res.displayValue )
+            if(userBalance < amount){
             OpenModalContext.setMessage('Balance is low');
             OpenModalContext.setModalOpen(true);
             return false
+            }
+            else if (amount > target - collected){
+                OpenModalContext.setMessage(`Maximum donation for this campaign is ${target - collected}`);
+                OpenModalContext.setModalOpen(true);
+                return false
             }
             else return true
 
@@ -44,11 +49,16 @@ const ViewCampaign = ({campaign,id,setChanged}) => {
             OpenModalContext.setModalOpen(true);
             return false
         }
+        else if (amount > target - collected){
+            OpenModalContext.setMessage(`Maximum donation for this campaign is ${target - collected}`);
+            OpenModalContext.setModalOpen(true);
+            return false
+        }
         else return true
     }
     }
     const [tokenInfo, setTokenInfo] = useState({});
-    const currency =   Object.keys(tokenInfo).length > 0 ? tokenInfo.res.symbol : "ETH";
+    const [currency, setCurrency] = useState("ETH");
         const donate = async (e) => {
         e.preventDefault();
 
@@ -70,10 +80,16 @@ const ViewCampaign = ({campaign,id,setChanged}) => {
         
         if(!isNaN(value)) setAmount(value);
       }
-
         
         useEffect(() => {
-            if(erc20status === "success"){
+            if(erc20status !== "success"){
+                setLoading(true);
+            }
+            else{
+                setLoading(false);
+                symbol().then(res => {
+                    setCurrency(res)
+                })
                 erc20Contract.balanceOf(address).then(res => {
                     setTokenInfo({
                         res

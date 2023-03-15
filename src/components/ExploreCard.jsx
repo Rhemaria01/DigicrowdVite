@@ -1,5 +1,5 @@
 import React,{useEffect, useState} from 'react'
-import { useContract } from '@thirdweb-dev/react';
+import { useContract, useContractWrite } from '@thirdweb-dev/react';
 
 import { hexToEth } from '../utils/utils';
 import { Link } from 'react-router-dom';
@@ -9,6 +9,7 @@ import { useStateContext } from '../context';
 const ExploreCard = ({campaign, index}) => {
   const { address } = useStateContext();
   const {contract: erc20Contract, status: erc20status} = useContract(campaign.token,"token");
+  const {mutateAsync: symbol} = useContractWrite(erc20Contract, "symbol");
 
     const collected = hexToEth(campaign.amountCollected?._hex);
     const days = Math.floor((campaign.deadline - new Date().getTime())/ (1000 * 3600 * 24));
@@ -17,10 +18,15 @@ const ExploreCard = ({campaign, index}) => {
     const target = hexToEth(campaign.target?._hex);
     const hasVideo = campaign.image.map((img) => img.includes('video')).includes(true);
     const videoIndex = campaign.image.map((img) => img.includes('video')).indexOf(true);
-    // console.log('videoIndex', videoIndex);
+
     const video = campaign.image[videoIndex-1];
+    const [currency, setCurrency] = useState("ETH");
+
     useEffect(() => {
       if(erc20status === "success"){
+        symbol().then(res => {
+            setCurrency(res)
+        })
           erc20Contract.balanceOf(address).then(res => {
               setTokenInfo({
                   res
@@ -42,8 +48,8 @@ const ExploreCard = ({campaign, index}) => {
                 </p>
             </div>    
             <div className='w-72 mt-10 flex flex-row justify-between'>
-                    <p className='text-black font-bold text-xs font-roboto '>Collected: <em>{collected} {Object.keys(tokenInfo).length > 0  ? tokenInfo.res.symbol :   "ETH"} </em></p>
-                    <p className='text-black font-bold text-xs font-roboto '>Need: <em>{target} {Object.keys(tokenInfo).length > 0  ? tokenInfo.res.symbol :  "ETH"}</em></p>
+                    <p className='text-black font-bold text-xs font-roboto '>Collected: <em>{collected} {currency} </em></p>
+                    <p className='text-black font-bold text-xs font-roboto '>Need: <em>{target} {currency}</em></p>
             </div>
             <div className='h-5  w-[90%] bg-[#CBCBCB] rounded-lg mt-2 mb-5'>
                 <div className={`h-5 rounded-lg bg-[#50FF33] `} style={{width: `${(collected/target)*100}%`}}></div>
