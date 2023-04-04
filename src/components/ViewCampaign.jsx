@@ -83,7 +83,7 @@ const ViewCampaign = ({campaign,id,setChanged}) => {
         
         useEffect(() => {
             if(erc20status !== "success"){
-                setLoading(true);
+                setLoading(false);
             }
             else{
                 setLoading(false);

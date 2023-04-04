@@ -37,13 +37,13 @@ const Explore = () => {
         {
         isCampaignsLoading ? <div className='flex justify-center h-[30rem]'><Loader /></div> :
         <div className='flex flex-row' >
-       {campaigns.map((campaign, index) => {
-          return (
 
-              <ExploreCard key={index}  campaign={campaign} index={index} />
+       {  campaigns.slice(0).reverse().map((campaign, index) => {
+              if(index>3) return 
+              else return <ExploreCard key={campaigns.length-1-index}  campaign={campaign} index={campaigns.length-1-index} />
+        })
 
-          )
-        })}
+        }
       </div>
       }
         

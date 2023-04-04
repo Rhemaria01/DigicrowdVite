@@ -9,12 +9,13 @@ import { useAddress,
     useStorageUpload,
  } from "@thirdweb-dev/react";
 import { ethers } from "ethers";
-
+import abi from "../utils/abi.json"
 const StateContext = createContext();
 
 export const StateProvider = ({ children }) => {
-    
-    const {  contract, status } = useContract("0x201A2DE1D313BF00a2339618E31A81F1a17F7DB4");
+
+    const contractAddress = "0x201A2DE1D313BF00a2339618E31A81F1a17F7DB4"
+    const {  contract, status } = useContract(contractAddress);
     const { mutateAsync: createCampaign } = useContractWrite(contract, "createCampaign");
     const {mutateAsync: upload} = useStorageUpload();
     const address = useAddress();
@@ -95,7 +96,7 @@ export const StateProvider = ({ children }) => {
 
     const sendTokens = async (token,tokenAddress,id,amount) => {
         try{
-        const res = await token.transfer("0x201A2DE1D313BF00a2339618E31A81F1a17F7DB4", amount);
+        const res = await token.transfer(contractAddress, amount);
         console.log("res",res);
         const data = await contract.call("transferERC20",tokenAddress,id,address,ethers.utils.parseEther(amount))
         console.log('data', data);

@@ -41,7 +41,7 @@ const Verification = ({setVerified}) => {
             method: 'POST',
             headers: {
                 'content-type': 'application/x-www-form-urlencoded',
-                'X-RapidAPI-Key': '88d4bbbd59msh666cc1cf119be0ep16626fjsn835830a91ec8',
+                'X-RapidAPI-Key': '1f99600ee5msh780cd3ab35a61afp10c36bjsn568b8d66fb1b',
                 'X-RapidAPI-Host': 'verifyaadhaarnumber.p.rapidapi.com'
             },
             body: encodedParams

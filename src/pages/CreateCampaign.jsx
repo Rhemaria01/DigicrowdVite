@@ -34,7 +34,7 @@ const CreateCampaign = () => {
     const OpenModalContext = useContext(ModalContext);
     const [loading, setLoading] = useState(false);
     const { createCampaign, uploadImage, address, connect} = useStateContext();
-    const [verified, setVerified] = useState(false);
+    const [verified, setVerified] = useState(true);
     const navigate = useNavigate();
     const [form, setForm] = useState({
       name: '',
